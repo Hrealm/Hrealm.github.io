@@ -123,6 +123,49 @@
         </div></article>
       <article class="post">
     <header class="post-header">
+      <h1 class="post-title"><a class="post-link" href="/2018/11/29/跨域Ajax/">跨域Ajax</a>
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-29
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>Ajax 即“Asynchronous Javascript And XML”（异步 JavaScript 和 XML），是指一种创建交互式网页应用的网页开发技术。意思就是用JavaScript执行<strong>异步网络请求</strong>。</p>
+<blockquote>
+<p><strong>特点：在不刷新页面的前提下去传输数据</strong></p>
+</blockquote>
+<h1 id="Ajax原生js写法"><a href="#Ajax原生js写法" class="headerlink" title="Ajax原生js写法"></a>Ajax原生js写法</h1><p>Ajax实现异步网络请求主要依靠<code>XMLHttpRequest</code>对象</p>
+<h2 id="XMLHttpRequest对象"><a href="#XMLHttpRequest对象" class="headerlink" title="XMLHttpRequest对象"></a>XMLHttpRequest对象</h2><p>XMLHttpRequest 对象用于在后台与服务器交换数据，能够在不重新加载页面的情况下更新网页，在页面已加载后从服务器请求数据，接收数据，在后台向服务器发送数据。所以<strong>XMLHttpRequest对象是Ajax技术的核心所在。</strong></p>
+<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><ol>
+<li>创建ajax对象</li>
+</ol>
+<figure class="highlight plain"><figcaption><span>var xhr </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 创建请求</span><br><span class="line"></span><br><span class="line">```$ xhr.open(&quot;get&quot; , &quot;lujing&quot; , true);</span><br></pre></td></tr></table></figure>
+<p><code>open()</code>三个参数：方式，路径，是否异步</p>
+<p><code>true</code> 表示脚本会在<code>send()</code>方法之后继续执行，而不等待来自服务器的响应。</p>
+<ol start="3">
+<li>发送请求</li>
+</ol>
+<figure class="highlight plain"><figcaption><span>xhr.send();```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 监听回调函数状态</span><br></pre></td></tr></table></figure>
+<p>xhr.onreadystatechange = function () { // 状态发生变化时，函数被回调<br>    if (xhr.readyState === 4) {<br>        // 判断响应结果:<br>        if (xhr.status === 200) {<br>            // 成功，通过responseText拿到响应的文本:<br>            return success(xhr.responseText);<br>        } else {<br>            // 失败，根据响应码判断失败原因:<br>            return fail(xhr.status);<br>        }<br>    } else {<br>        // HTTP请求还在继续…<br>    }<br>}<br><code>`</code></p>
+<h2 id="readyState-请求状态码"><a href="#readyState-请求状态码" class="headerlink" title=".readyState 请求状态码"></a>.readyState 请求状态码</h2><ul>
+<li>0 未初始化 - 请求还没建立</li>
+<li>1 启动 - 请求建立了，调用<code>open()</code>但未调用<code>send()</code></li>
+<li>2 发送 - 请求发送了，调用<code>send()</code>但未处理返回数据</li>
+<li>3 接收 - 请求有部分返回数据可用了</li>
+<li>4 完成 - 请求完成，所有数据可用</li>
+</ul>
+<h2 id="onreadystatechange-事件"><a href="#onreadystatechange-事件" class="headerlink" title=".onreadystatechange 事件"></a>.onreadystatechange 事件</h2><p>当请求码<code>readyState</code>发生改变的时候触发</p>
+<p><code>status</code>响应的HTTP状态码</p>
+<p><code>.responseText</code> 后台返回的文本内容</p>
+
+        </div></article>
+      <article class="post">
+    <header class="post-header">
       <h1 class="post-title"><a class="post-link" href="/2017/04/17/MyFirstBlog/">MyFirstBlog</a>
         </h1>
 

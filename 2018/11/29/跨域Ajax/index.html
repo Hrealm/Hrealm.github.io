@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="MyFirstBlog"><meta name="keywords" content="css, Hrealm's Blog"><link rel="alternate" href="/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://hrealm.github.io/2017/04/17/MyFirstBlog/">
+<meta name="description" content="跨域Ajax"><meta name="keywords" content="Ajax, Hrealm's Blog"><link rel="alternate" href="/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://hrealm.github.io/2018/11/29/跨域Ajax/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>MyFirstBlog - Hrealm's Blog</title>
+    <title>跨域Ajax - Hrealm's Blog</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -106,24 +106,50 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">MyFirstBlog
+      <h1 class="post-title">跨域Ajax
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2017-04-17
-        </span></div>
+          2018-11-29
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
     </header>
 
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#学无止境"><span class="toc-text">学无止境</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#H1"><span class="toc-text">H1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#H2H2"><span class="toc-text">H2H2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#H3H3H3"><span class="toc-text">H3H3H3</span></a></li></ol></li></ol>
-    </li></div>
-  </div><div class="post-content"><p>测试一下这个东西OK不，一直以来都想要搭建自己的<a href="https://Hrealm.github.io/atom.xml">博客</a>，可是都没有时间，今天终于搭好了期待已久<a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>!看了师兄的博客，实在大神级别，也是我一直以来的崇拜者<a href="https://Ahonn.me/" target="_blank" rel="noopener">@Ahonn</a>，求学永无止境！</p>
-<a id="more"></a>
-<h2 id="学无止境"><a href="#学无止境" class="headerlink" title="学无止境"></a>学无止境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ target.push(<span class="string">'vue'</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="H1"><a href="#H1" class="headerlink" title="H1"></a>H1</h1><h2 id="H2H2"><a href="#H2H2" class="headerlink" title="H2H2"></a>H2H2</h2><h3 id="H3H3H3"><a href="#H3H3H3" class="headerlink" title="H3H3H3"></a>H3H3H3</h3><p>Test~~</p>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax原生js写法"><span class="toc-text">Ajax原生js写法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XMLHttpRequest对象"><span class="toc-text">XMLHttpRequest对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现流程"><span class="toc-text">实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readyState-请求状态码"><span class="toc-text">.readyState 请求状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#onreadystatechange-事件"><span class="toc-text">.onreadystatechange 事件</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><p>Ajax 即“Asynchronous Javascript And XML”（异步 JavaScript 和 XML），是指一种创建交互式网页应用的网页开发技术。意思就是用JavaScript执行<strong>异步网络请求</strong>。</p>
+<blockquote>
+<p><strong>特点：在不刷新页面的前提下去传输数据</strong></p>
+</blockquote>
+<h1 id="Ajax原生js写法"><a href="#Ajax原生js写法" class="headerlink" title="Ajax原生js写法"></a>Ajax原生js写法</h1><p>Ajax实现异步网络请求主要依靠<code>XMLHttpRequest</code>对象</p>
+<h2 id="XMLHttpRequest对象"><a href="#XMLHttpRequest对象" class="headerlink" title="XMLHttpRequest对象"></a>XMLHttpRequest对象</h2><p>XMLHttpRequest 对象用于在后台与服务器交换数据，能够在不重新加载页面的情况下更新网页，在页面已加载后从服务器请求数据，接收数据，在后台向服务器发送数据。所以<strong>XMLHttpRequest对象是Ajax技术的核心所在。</strong></p>
+<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><ol>
+<li>创建ajax对象</li>
+</ol>
+<figure class="highlight plain"><figcaption><span>var xhr </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 创建请求</span><br><span class="line"></span><br><span class="line">```$ xhr.open(&quot;get&quot; , &quot;lujing&quot; , true);</span><br></pre></td></tr></table></figure>
+<p><code>open()</code>三个参数：方式，路径，是否异步</p>
+<p><code>true</code> 表示脚本会在<code>send()</code>方法之后继续执行，而不等待来自服务器的响应。</p>
+<ol start="3">
+<li>发送请求</li>
+</ol>
+<figure class="highlight plain"><figcaption><span>xhr.send();```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 监听回调函数状态</span><br></pre></td></tr></table></figure>
+<p>xhr.onreadystatechange = function () { // 状态发生变化时，函数被回调<br>    if (xhr.readyState === 4) {<br>        // 判断响应结果:<br>        if (xhr.status === 200) {<br>            // 成功，通过responseText拿到响应的文本:<br>            return success(xhr.responseText);<br>        } else {<br>            // 失败，根据响应码判断失败原因:<br>            return fail(xhr.status);<br>        }<br>    } else {<br>        // HTTP请求还在继续…<br>    }<br>}<br><code>`</code></p>
+<h2 id="readyState-请求状态码"><a href="#readyState-请求状态码" class="headerlink" title=".readyState 请求状态码"></a>.readyState 请求状态码</h2><ul>
+<li>0 未初始化 - 请求还没建立</li>
+<li>1 启动 - 请求建立了，调用<code>open()</code>但未调用<code>send()</code></li>
+<li>2 发送 - 请求发送了，调用<code>send()</code>但未处理返回数据</li>
+<li>3 接收 - 请求有部分返回数据可用了</li>
+<li>4 完成 - 请求完成，所有数据可用</li>
+</ul>
+<h2 id="onreadystatechange-事件"><a href="#onreadystatechange-事件" class="headerlink" title=".onreadystatechange 事件"></a>.onreadystatechange 事件</h2><p>当请求码<code>readyState</code>发生改变的时候触发</p>
+<p><code>status</code>响应的HTTP状态码</p>
+<p><code>.responseText</code> 后台返回的文本内容</p>
 
       </div>
       <div class="post-copyright">
@@ -133,7 +159,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://hrealm.github.io/2017/04/17/MyFirstBlog/">https://hrealm.github.io/2017/04/17/MyFirstBlog/</a>
+      <a href="https://hrealm.github.io/2018/11/29/跨域Ajax/">https://hrealm.github.io/2018/11/29/跨域Ajax/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
@@ -141,13 +167,18 @@
   </div>
       <footer class="post-footer">
         <div class="post-tags">
-            <a href="/tags/css/">css</a>
+            <a href="/tags/Ajax/">Ajax</a>
             </div>
         
-        <nav class="post-nav"><a class="prev" href="/2018/11/29/跨域Ajax/">
+        <nav class="post-nav"><a class="prev" href="/2019/04/17/hello-world/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">跨域Ajax</span>
+        <span class="prev-text nav-default">Hello World</span>
         <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2017/04/17/MyFirstBlog/">
+        <span class="next-text nav-default">MyFirstBlog</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
       </a>
     </nav></footer>
     </article></div><div class="comments" id="comments"></div></div>
