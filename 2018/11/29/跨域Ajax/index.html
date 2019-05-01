@@ -127,6 +127,7 @@
 <blockquote>
 <p><strong>特点：在不刷新页面的前提下去传输数据</strong></p>
 </blockquote>
+<a id="more"></a>
 <h1 id="Ajax原生js写法"><a href="#Ajax原生js写法" class="headerlink" title="Ajax原生js写法"></a>Ajax原生js写法</h1><p>Ajax实现异步网络请求主要依靠<code>XMLHttpRequest</code>对象</p>
 <h2 id="XMLHttpRequest对象"><a href="#XMLHttpRequest对象" class="headerlink" title="XMLHttpRequest对象"></a>XMLHttpRequest对象</h2><p>XMLHttpRequest 对象用于在后台与服务器交换数据，能够在不重新加载页面的情况下更新网页，在页面已加载后从服务器请求数据，接收数据，在后台向服务器发送数据。所以<strong>XMLHttpRequest对象是Ajax技术的核心所在。</strong></p>
 <h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><ol>
@@ -140,11 +141,11 @@
 <p><code>open()</code>三个参数：方式，路径，是否异步</p>
 <p><code>true</code> 表示脚本会在<code>send()</code>方法之后继续执行，而不等待来自服务器的响应。</p>
 <ol start="3">
-<li><p>发送请求</p>
-<pre><code>$ xhr.send();
-</code></pre></li>
-<li><p>监听回调函数状态</p>
-</li>
+<li>发送请求</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ xhr.send();</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>监听回调函数状态</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">xhr.onreadystatechange = function () &#123; // 状态发生变化时，函数被回调</span><br><span class="line">    if (xhr.readyState === 4) &#123;</span><br><span class="line">        // 判断响应结果:</span><br><span class="line">        if (xhr.status === 200) &#123;</span><br><span class="line">            // 成功，通过responseText拿到响应的文本:</span><br><span class="line">            return success(xhr.responseText);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // 失败，根据响应码判断失败原因:</span><br><span class="line">            return fail(xhr.status);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // HTTP请求还在继续...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="readyState-请求状态码"><a href="#readyState-请求状态码" class="headerlink" title=".readyState 请求状态码"></a>.readyState 请求状态码</h2><ul>
