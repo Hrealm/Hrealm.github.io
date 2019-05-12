@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-04-18T08:37:26.960Z</updated>
+  <updated>2019-05-12T15:45:45.107Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>从 URL 到浏览器渲染完成</title>
+    <link href="https://hrealm.github.io/2019/05/12/finished-from-url-to-browser/"/>
+    <id>https://hrealm.github.io/2019/05/12/finished-from-url-to-browser/</id>
+    <published>2019-05-12T15:38:51.000Z</published>
+    <updated>2019-05-12T15:45:45.107Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="HTTP" scheme="https://hrealm.github.io/categories/HTTP/"/>
+    
+    
+      <category term="DOM渲染" scheme="https://hrealm.github.io/tags/DOM%E6%B8%B2%E6%9F%93/"/>
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
