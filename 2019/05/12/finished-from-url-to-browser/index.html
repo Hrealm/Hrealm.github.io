@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="从 URL 到浏览器渲染完成"><meta name="keywords" content="DOM渲染, Hrealm's Blog"><link rel="alternate" href="/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<meta name="description" content="从 URL 到浏览器渲染完成"><meta name="keywords" content="DOM渲染 TCP连接, Hrealm's Blog"><link rel="alternate" href="/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
 <link rel="canonical" href="https://hrealm.github.io/2019/05/12/finished-from-url-to-browser/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
@@ -113,7 +113,7 @@
         <span class="post-time">
           2019-05-12
         </span><span class="post-category">
-            <a href="/categories/HTTP/">HTTP</a>
+            <a href="/categories/How-browsers-work/">How-browsers-work</a>
             </span>
         </div>
     </header>
@@ -121,9 +121,21 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模糊概念"><span class="toc-text">模糊概念</span></a></li></ol>
     </div>
-  </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    大二学完计算机网络到现在，对”从URL到浏览器渲染完成“一直都只是一个比较模糊的概念，今天有空总结一下</p>
+  </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学完计算机网络到现在（感觉已经全部还给老师了），对于输入URL到浏览器渲染完成显示页面这个过程一直都只是一个比较模糊的概念，今天有空总结一下</p>
+<a id="more"></a>
+<h2 id="模糊概念"><a href="#模糊概念" class="headerlink" title="模糊概念"></a>模糊概念</h2><p>当你输入指定的<code>URL</code>（Uniform Resource Locator统一资源定位符）并按下回车，浏览器就开始干活了</p>
+<ol>
+<li>DNS域名解析</li>
+<li>建立TCP连接</li>
+<li>发送HTTP请求</li>
+<li>服务器处理请求</li>
+<li>返回响应结果</li>
+<li>关闭TCP连接</li>
+<li>浏览器解析HTML</li>
+<li>浏览器渲染页面</li>
+</ol>
 
       </div>
       <div class="post-copyright">
@@ -141,7 +153,7 @@
   </div>
       <footer class="post-footer">
         <div class="post-tags">
-            <a href="/tags/DOM渲染/">DOM渲染</a>
+            <a href="/tags/DOM渲染-TCP连接/">DOM渲染 TCP连接</a>
             </div>
         
         <nav class="post-nav"><a class="next" href="/2019/04/17/hello-world/">
