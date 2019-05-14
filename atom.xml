@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-05-14T06:36:09.454Z</updated>
+  <updated>2019-05-14T06:41:09.031Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://hrealm.github.io/2019/05/12/finished-from-url-to-browser/"/>
     <id>https://hrealm.github.io/2019/05/12/finished-from-url-to-browser/</id>
     <published>2019-05-12T15:38:51.000Z</published>
-    <updated>2019-05-14T06:36:09.454Z</updated>
+    <updated>2019-05-14T06:41:09.031Z</updated>
     
     <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学完计算机网络到现在（感觉已经全部还给老师了），对于输入URL到浏览器渲染完成显示页面这个过程一直都只是一个比较模糊的概念，今天有空总结一下</p><a id="more"></a><h2 id="模糊概念"><a href="#模糊概念" class="headerlink" title="模糊概念"></a>模糊概念</h2><p>当你输入指定的<code>URL</code>（Uniform Resource Locator统一资源定位符）并按下回车，浏览器就开始干活了</p><ol><li>DNS域名解析</li><li>建立TCP连接</li><li>发送HTTP请求</li><li>服务器处理请求</li><li>返回响应结果</li><li>关闭TCP连接</li><li>浏览器解析HTML</li><li>浏览器渲染页面</li></ol>]]></content>
     
@@ -34,7 +34,9 @@
       <category term="How-browsers-work" scheme="https://hrealm.github.io/categories/How-browsers-work/"/>
     
     
-      <category term="DOM渲染 TCP连接" scheme="https://hrealm.github.io/tags/DOM%E6%B8%B2%E6%9F%93-TCP%E8%BF%9E%E6%8E%A5/"/>
+      <category term="DOM渲染" scheme="https://hrealm.github.io/tags/DOM%E6%B8%B2%E6%9F%93/"/>
+    
+      <category term="TCP连接" scheme="https://hrealm.github.io/tags/TCP%E8%BF%9E%E6%8E%A5/"/>
     
   </entry>
   
