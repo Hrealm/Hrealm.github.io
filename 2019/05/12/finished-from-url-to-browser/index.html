@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模糊概念"><span class="toc-text">模糊概念</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#网络连接通信"><span class="toc-text">网络连接通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-ensp-ensp-ensp-输入-URL"><span class="toc-text">     输入 URL</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模糊概念"><span class="toc-text">模糊概念</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#网络连接通信"><span class="toc-text">网络连接通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-ensp-输入-URL"><span class="toc-text">   输入 URL</span></a></li></ol>
     </li></div>
   </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学完计算机网络到现在（感觉已经全部还给老师了），对于输入<code>URL</code>到浏览器渲染完成显示页面这个过程一直都只是一个比较模糊的概念，今天有空总结一下</p>
 <a id="more"></a>
@@ -138,7 +138,7 @@
 </ol>
 <p>以上8个过程，我大致分为两个部分：网络连接通信和页面渲染，进行详细了解</p>
 <h1 id="网络连接通信"><a href="#网络连接通信" class="headerlink" title="网络连接通信"></a>网络连接通信</h1><p>每个网络设备间的通信都遵循<code>TCP/IP</code>协议，利用<code>TCP/IP</code>协议族进行网络通信时，会通过分层顺序与对方进行通信。<code>TCP/IP</code>模型分层自上而下分别为：应用层、传输层、网络层、数据链路层、物理层。发送端从应用层往下走，接收端从底层往上走。</p>
-<h2 id="ensp-ensp-ensp-ensp-输入-URL"><a href="#ensp-ensp-ensp-ensp-输入-URL" class="headerlink" title="&ensp;&ensp;&ensp;&ensp; 输入 URL"></a>&ensp;&ensp;&ensp;&ensp; 输入 URL</h2><p>用户输入的<code>URL</code>可以为域名或<code>IP</code>地址，使用域名是为了方便记忆，但是为了让计算机理解这个地址还需要把它解析为<code>IP</code>地址。上面我说到，当用户输入<code>URL</code>并按下回车，浏览器才开始工作其实是不正确的，现在主流浏览器引入了<code>DNS</code>预取技术。 浏览器为了加快域名<code>DNS</code>解析速度，会对网页的所有链接先做域名解析。所以，当用户在输入指定<code>URL</code>的时候，浏览器其实已经在本地缓存模糊搜索<code>URL</code>了，然后智能提示并助于用户补全<code>URL</code>，并且在用户还没有按下回车键的时候，浏览器就已经开始使用<code>DNS</code>预取技术解析该域名了。</p>
+<h2 id="ensp-ensp-输入-URL"><a href="#ensp-ensp-输入-URL" class="headerlink" title="&ensp;&ensp; 输入 URL"></a>&ensp;&ensp; 输入 URL</h2><p>用户输入的<code>URL</code>可以为域名或<code>IP</code>地址，使用域名是为了方便记忆，但是为了让计算机理解这个地址还需要把它解析为<code>IP</code>地址。上面我说到，当用户输入<code>URL</code>并按下回车，浏览器才开始工作其实是不正确的，现在主流浏览器引入了<code>DNS</code>预取技术。 浏览器为了加快域名<code>DNS</code>解析速度，会对网页的所有链接先做域名解析。所以，当用户在输入指定<code>URL</code>的时候，浏览器其实已经在本地缓存模糊搜索<code>URL</code>了，然后智能提示并助于用户补全<code>URL</code>，并且在用户还没有按下回车键的时候，浏览器就已经开始使用<code>DNS</code>预取技术解析该域名了。</p>
 
       </div>
       <div class="post-copyright">
