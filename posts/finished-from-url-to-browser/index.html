@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模糊概念"><span class="toc-text">模糊概念</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#网络连接通信"><span class="toc-text">网络连接通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-输入-URL"><span class="toc-text">  输入 URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-DNS-域名解析"><span class="toc-text">  DNS 域名解析</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模糊概念"><span class="toc-text">模糊概念</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#网络连接通信"><span class="toc-text">网络连接通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-输入-URL"><span class="toc-text">  输入 URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-DNS-域名解析"><span class="toc-text">  DNS 域名解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ensp-建立TCP连接"><span class="toc-text">  建立TCP连接</span></a></li></ol>
     </li></div>
   </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学完计算机网络到现在（感觉已经全部还给老师了），对于输入<code>URL</code>到浏览器渲染完成显示页面这个过程一直都只是一个比较模糊的概念，今天有空总结一下</p>
 <a id="more"></a>
@@ -153,6 +153,7 @@
 <p>从客户端到本地服务器属于<strong>递归查询</strong>，而<code>DNS</code>服务器之间的交互属于<strong>迭代查询</strong></p>
 <p>正常情况下，本地<code>DNS</code>服务器的缓存中已有<code>comDNS</code>服务器的地址，因此请求根域名服务器这一步不是必需的。</p>
 </blockquote>
+<h2 id="ensp-建立TCP连接"><a href="#ensp-建立TCP连接" class="headerlink" title="&ensp; 建立TCP连接"></a>&ensp; 建立TCP连接</h2><p>TCP 是一种面向有连接的传输层协议。</p>
 
       </div>
       <div class="post-copyright">
