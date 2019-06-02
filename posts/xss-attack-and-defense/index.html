@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="解析 XSS 跨域攻击机制及防御技术"><meta name="keywords" content="XSS漏洞, Hrealm's Blog"><link rel="alternate" href="/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://hrealm.github.io/posts/xss-attack-and-defense/">
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>解析 XSS 跨域攻击机制及防御技术 - Hrealm's Blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">解析 XSS 跨域攻击机制及防御技术
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-02
+        </span><span class="post-category">
+            <a href="/categories/Web-security/">Web-security</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的原理"><span class="toc-text">XSS 攻击的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的分类"><span class="toc-text">XSS 攻击的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击危害"><span class="toc-text">XSS 攻击危害</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-攻击实现"><span class="toc-text">XSS 攻击实现</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在<a href="https://www.cnvd.org.cn/flaw/typelist?typeId=29" target="_blank" rel="noopener"><code>CNVD</code>（国家信息安全漏洞共享平台）</a>找了一个存在<code>XSS</code>漏洞的<code>Web</code>应用进行复现。在<code>PHP</code> + <code>MySQL</code>环境上搭建出一个真实的实验环境对<code>zzcms v8.2</code>的一个<code>XSS</code>漏洞进行复现，进而解析<code>XSS</code>跨域攻击机制及防御技术。</p>
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>跨站脚本攻击<code>（XSS）</code>是客户端<code>Web</code>安全的最大威胁之一，不仅危害<code>Web</code>业务本身，同时对访问<code>Web</code>业务的用户也会带来直接的影响。因跨站脚本攻击的多样性以及<code>Web</code>安全漏洞的隐蔽性，使得<code>XSS</code>的攻击很难彻底防御。</p>
+<h3 id="XSS-攻击的原理"><a href="#XSS-攻击的原理" class="headerlink" title="XSS 攻击的原理"></a>XSS 攻击的原理</h3><p>跨站脚本攻击本质上是一种将恶意脚本嵌入到当前网页中并执行的攻击方式。通常情况下，黑客通过“<code>HTML</code>注入”行为篡改网页，并插入恶意<code>JavaScript</code>脚本，从而在用户浏览网页的时候控制浏览器行为。这种漏洞产生的主要原因是网站对于用户提交的数据过滤不严格，导致用户提交的数据可以修改当前页面或者插入了一段脚本。</p>
+<p>攻击者可利用其用户身份在输入参数时，附带了恶意脚本，在提交服务器之后，服务器没有对用户端传入的参数做任何安全过滤。之后服务器会根据业务流程，将恶意脚本存储在数据库中或直接回显给用户。在用户浏览含有恶意脚本的页面时，恶意脚本会在用户浏览器上成功执行。</p>
+<h3 id="XSS-攻击的分类"><a href="#XSS-攻击的分类" class="headerlink" title="XSS 攻击的分类"></a>XSS 攻击的分类</h3><ul>
+<li>反射型跨站攻击：涉及浏览器—服务器交互</li>
+<li>存储型跨站攻击：涉及浏览器—服务器—数据库交互</li>
+<li>DOM型跨站攻击：涉及浏览器—服务器交互</li>
+</ul>
+<h3 id="XSS-攻击危害"><a href="#XSS-攻击危害" class="headerlink" title="XSS 攻击危害"></a>XSS 攻击危害</h3><ul>
+<li>窃取用户Cookie</li>
+<li>控制企业数据，包括读取、篡改、添加、删除企业敏感数据的能力</li>
+<li>窃取具有商业价值的资料</li>
+<li>非法转账，非法进行交易</li>
+<li>植入木马病毒</li>
+<li>强行弹出广告</li>
+<li>操控用户主机</li>
+<li>…</li>
+</ul>
+<h2 id="XSS-攻击实现"><a href="#XSS-攻击实现" class="headerlink" title="XSS 攻击实现"></a>XSS 攻击实现</h2><p><code>XSS</code>攻击是需要满足<code>XSS</code>攻击的条件。<code>XSS</code>漏洞的利用过程较为直接。反射型/<code>DOM</code>型跨站攻击均可以理解为：服务器接收到数据，并原样返回给用户，整个过程中<code>Web</code>应用并没有存入数据库，这也导致了攻击无法持久化，仅针对当次请求有效，也就无法直接攻击其他用户。一般这两类攻击也可利用钓鱼、垃圾邮件等手段产生攻击其他用户效果。</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/xss-attack-and-defense/">https://hrealm.github.io/posts/xss-attack-and-defense/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/XSS漏洞/">XSS漏洞</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/posts/finished-from-url-to-browser/">
+        <span class="next-text nav-default">从 URL 到浏览器渲染完成（一）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

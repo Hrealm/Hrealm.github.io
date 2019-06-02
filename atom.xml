@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-05-21T06:06:12.315Z</updated>
+  <updated>2019-06-02T04:51:29.227Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>解析 XSS 跨域攻击机制及防御技术</title>
+    <link href="https://hrealm.github.io/posts/xss-attack-and-defense/"/>
+    <id>https://hrealm.github.io/posts/xss-attack-and-defense/</id>
+    <published>2019-06-02T03:43:29.000Z</published>
+    <updated>2019-06-02T04:51:29.227Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在<a href="https://www.cnvd.org.cn/flaw/typelist?typeId=29" target="_blank" rel="noopener"><code>CNVD</code>（国家信息安全漏洞共享平台）</a>找了一个存在<code>XSS</code>漏洞的<code>Web</code>应用进行复现。在<code>PHP</code> + <code>MySQL</code>环境上搭建出一个真实的实验环境对<code>zzcms v8.2</code>的一个<code>XSS</code>漏洞进行复现，进而解析<code>XSS</code>跨域攻击机制及防御技术。</p><a id="more"></a><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>跨站脚本攻击<code>（XSS）</code>是客户端<code>Web</code>安全的最大威胁之一，不仅危害<code>Web</code>业务本身，同时对访问<code>Web</code>业务的用户也会带来直接的影响。因跨站脚本攻击的多样性以及<code>Web</code>安全漏洞的隐蔽性，使得<code>XSS</code>的攻击很难彻底防御。</p><h3 id="XSS-攻击的原理"><a href="#XSS-攻击的原理" class="headerlink" title="XSS 攻击的原理"></a>XSS 攻击的原理</h3><p>跨站脚本攻击本质上是一种将恶意脚本嵌入到当前网页中并执行的攻击方式。通常情况下，黑客通过“<code>HTML</code>注入”行为篡改网页，并插入恶意<code>JavaScript</code>脚本，从而在用户浏览网页的时候控制浏览器行为。这种漏洞产生的主要原因是网站对于用户提交的数据过滤不严格，导致用户提交的数据可以修改当前页面或者插入了一段脚本。</p><p>攻击者可利用其用户身份在输入参数时，附带了恶意脚本，在提交服务器之后，服务器没有对用户端传入的参数做任何安全过滤。之后服务器会根据业务流程，将恶意脚本存储在数据库中或直接回显给用户。在用户浏览含有恶意脚本的页面时，恶意脚本会在用户浏览器上成功执行。</p><h3 id="XSS-攻击的分类"><a href="#XSS-攻击的分类" class="headerlink" title="XSS 攻击的分类"></a>XSS 攻击的分类</h3><ul><li>反射型跨站攻击：涉及浏览器—服务器交互</li><li>存储型跨站攻击：涉及浏览器—服务器—数据库交互</li><li>DOM型跨站攻击：涉及浏览器—服务器交互</li></ul><h3 id="XSS-攻击危害"><a href="#XSS-攻击危害" class="headerlink" title="XSS 攻击危害"></a>XSS 攻击危害</h3><ul><li>窃取用户Cookie</li><li>控制企业数据，包括读取、篡改、添加、删除企业敏感数据的能力</li><li>窃取具有商业价值的资料</li><li>非法转账，非法进行交易</li><li>植入木马病毒</li><li>强行弹出广告</li><li>操控用户主机</li><li>…</li></ul><h2 id="XSS-攻击实现"><a href="#XSS-攻击实现" class="headerlink" title="XSS 攻击实现"></a>XSS 攻击实现</h2><p><code>XSS</code>攻击是需要满足<code>XSS</code>攻击的条件。<code>XSS</code>漏洞的利用过程较为直接。反射型/<code>DOM</code>型跨站攻击均可以理解为：服务器接收到数据，并原样返回给用户，整个过程中<code>Web</code>应用并没有存入数据库，这也导致了攻击无法持久化，仅针对当次请求有效，也就无法直接攻击其他用户。一般这两类攻击也可利用钓鱼、垃圾邮件等手段产生攻击其他用户效果。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近在&lt;a href=&quot;https://www.cnvd.org.cn/flaw/typelist?typeId=29&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;code&gt;CNVD&lt;/code&gt;（国家信息安全漏洞共享平台）&lt;/a&gt;找了一个存在&lt;code&gt;XSS&lt;/code&gt;漏洞的&lt;code&gt;Web&lt;/code&gt;应用进行复现。在&lt;code&gt;PHP&lt;/code&gt; + &lt;code&gt;MySQL&lt;/code&gt;环境上搭建出一个真实的实验环境对&lt;code&gt;zzcms v8.2&lt;/code&gt;的一个&lt;code&gt;XSS&lt;/code&gt;漏洞进行复现，进而解析&lt;code&gt;XSS&lt;/code&gt;跨域攻击机制及防御技术。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Web-security" scheme="https://hrealm.github.io/categories/Web-security/"/>
+    
+    
+      <category term="XSS漏洞" scheme="https://hrealm.github.io/tags/XSS%E6%BC%8F%E6%B4%9E/"/>
+    
+  </entry>
   
   <entry>
     <title>从 URL 到浏览器渲染完成（一）</title>
