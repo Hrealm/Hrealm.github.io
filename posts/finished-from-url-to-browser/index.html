@@ -165,7 +165,7 @@
 </blockquote>
 <h2 id="ensp-发送HTTP请求"><a href="#ensp-发送HTTP请求" class="headerlink" title="&ensp; 发送HTTP请求"></a>&ensp; 发送HTTP请求</h2><p>与服务器建立连接后，客户端就向服务器发起请求，产生<code>HTTP</code>请求报文。</p>
 <p>一个<code>HTTP</code>请求报文由请求行<code>request line</code>、请求头部<code>header</code>、空行和请求数据4个部分组成。</p>
-<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/request-message.png"></div>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/request-message.png" width="55%" height="55%"></div>
 
 <p>在浏览器（Google）中查看报文首部：</p>
 <div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/Message.jpg" width="80%" height="80%"></div>
@@ -179,7 +179,19 @@
 <p>访问资源可以是访问静态资源，这个就直接根据<code>URL</code>地址去服务器里找即可；如果访问动态资源的话要经过一个叫<a href="https://baike.baidu.com/item/CGI/607810" target="_blank" rel="noopener"><code>CGI</code></a>的东西，再用服务端脚本处理，再返回给客户端。</p>
 <div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/processing-requests.png"></div>
 
-<h2 id="ensp-返回响应结果"><a href="#ensp-返回响应结果" class="headerlink" title="&ensp; 返回响应结果"></a>&ensp; 返回响应结果</h2>
+<h2 id="ensp-返回响应结果"><a href="#ensp-返回响应结果" class="headerlink" title="&ensp; 返回响应结果"></a>&ensp; 返回响应结果</h2><p>服务器在处理完请求后，返回一个<code>HTTP</code>响应报文。</p>
+<p><code>HTTP</code>响应报文和请求报文的结构差不多，也是由四个部分组成：状态行、消息报头、空行、响应体。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/response-message.png" width="40%" height="40%"></div>
+
+<p>响应报文中包括一个重要的信息一一状态码。状态码由三位数字组成，第一个数字定义了响应的类别，且有五种可能取值：</p>
+<ul>
+<li>1xx：指示信息 – 表示请求已接收，继续处理</li>
+<li>2xx：成功 – 表示请求已被成功接收、理解、接受</li>
+<li>3xx：重定向 – 要完成请求必须进行更进一步的操作</li>
+<li>4xx：客户端错误 – 请求有语法错误或请求无法实现</li>
+<li>5xx：服务器端错误 – 服务器未能实现合法的请求</li>
+</ul>
+
       </div>
       <div class="post-copyright">
     <p class="copyright-item">
