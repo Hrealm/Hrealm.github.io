@@ -163,7 +163,18 @@
 <p><strong>ACK</strong>： 即是确认字符，在数据通信中，服务器发给客户端的一种传输类控制字符。表示发来的数据已确认接收无误。<code>TCP</code>协议规定，只有<code>ACK=1</code>时有效，也规定连接建立后所有发送的报文的<code>ACK</code>必须为1。</p>
 <p><strong>FIN （finis）</strong>：完，终结的意思， 用来释放一个连接。当<code>FIN = 1</code>时，表明此报文段的发送方的数据已经发送完毕，并要求释放连接。</p>
 </blockquote>
-<h2 id="ensp-发送HTTP请求"><a href="#ensp-发送HTTP请求" class="headerlink" title="&ensp; 发送HTTP请求"></a>&ensp; 发送HTTP请求</h2>
+<h2 id="ensp-发送HTTP请求"><a href="#ensp-发送HTTP请求" class="headerlink" title="&ensp; 发送HTTP请求"></a>&ensp; 发送HTTP请求</h2><p>与服务器建立连接后，客户端就向服务器发起请求，产生<code>HTTP</code>请求报文。</p>
+<p>一个<code>HTTP</code>请求报文由请求行<code>request line</code>、请求头部<code>header</code>、空行和请求数据4个部分组成。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/request-message.png"></div>
+
+<p>在浏览器（Google）中查看报文首部：</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/finished-from-url-to-browser/Message.jpg" width="80%" height="80%"></div>
+
+<p>请求行，用来说明请求类型，要访问的资源以及所使用的HTTP版本；</p>
+<p>请求头部，紧接着请求行之后的部分，用来说明服务器要使用的附加信息；</p>
+<p>空行，请求头部后面的空行是必须的；</p>
+<p>请求体，可以添加任意的其他数据；</p>
+
       </div>
       <div class="post-copyright">
     <p class="copyright-item">
