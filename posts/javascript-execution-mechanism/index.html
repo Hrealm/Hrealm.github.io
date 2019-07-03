@@ -141,7 +141,7 @@
 </ul>
 <h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><p>定时器主要由<code>setTimeout()</code>和<code>setInterval()</code>两个函数来完成，它们内部运行机制完全不一样，不同的只是，前者一次性执行，后者反复执行。定时器，属于任务队列中的异步任务。</p>
 <p>常见问题，如以下代码：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">	task()</span><br><span class="line">&#125;,<span class="number">3000</span>)</span><br><span class="line"></span><br><span class="line">sleep(<span class="number">10000</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">task()</span><br><span class="line">&#125;,<span class="number">3000</span>)</span><br><span class="line"></span><br><span class="line">sleep(<span class="number">10000</span>)</span><br></pre></td></tr></table></figure>
 <p>以上代码执行<code>task()</code>需要的时间超过3秒，原因：</p>
 <ul>
 <li><code>task()</code>进入<code>Event Table</code>并注册，计时开始</li>
