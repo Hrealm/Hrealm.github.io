@@ -180,17 +180,14 @@
 </li>
 <li><p>所有微任务也按顺序执行，且在以下场景会立即执行所有微任务</p>
 <ul>
-<li><p>每个回调之后且<code>js</code>执行栈为空</p>
-</li>
-<li><p>每个宏任务结束后</p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><ul>
+<li><ol>
 <li>每个回调之后且<code>js</code>执行栈为空</li>
+</ol>
+</li>
+<li><ol start="2">
 <li>每个宏任务结束后</li>
+</ol>
+</li>
 </ul>
 </li>
 </ul>
