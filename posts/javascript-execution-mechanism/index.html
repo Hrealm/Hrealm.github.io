@@ -172,17 +172,29 @@
 </ol>
 <p>以上仅对谷歌浏览器进行执行分析，不同浏览器可能会从性能优化方面做一些处理从而导致输出的结果会不一样，这里不做分析。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><code>JavaScript</code>是一门单线程语言</li>
-<li>事件循环是<code>js</code>实现异步的一种方法，也是<code>js</code>的执行机制</li>
-<li>宏任务按顺序执行，且浏览器在每个宏任务之间渲染页面</li>
+<li><p><code>JavaScript</code>是一门单线程语言</p>
+</li>
+<li><p>事件循环是<code>js</code>实现异步的一种方法，也是<code>js</code>的执行机制</p>
+</li>
+<li><p>宏任务按顺序执行，且浏览器在每个宏任务之间渲染页面</p>
+</li>
 <li><p>所有微任务也按顺序执行，且在以下场景会立即执行所有微任务</p>
 <ul>
-<li>每个回调之后且<code>js</code>执行栈为空</li>
+<li><p>每个回调之后且<code>js</code>执行栈为空</p>
+</li>
+<li><p>每个宏任务结束后</p>
+</li>
 </ul>
 </li>
 </ul>
-<pre><code>- 每个宏任务结束后
-</code></pre><p>参考：<a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly" target="_blank" rel="noopener">JS事件循环机制（event loop）之宏任务、微任务</a>、阮一峰老师的JavaScript运行机制详解</p>
+<ul>
+<li><ul>
+<li>每个回调之后且<code>js</code>执行栈为空</li>
+<li>每个宏任务结束后</li>
+</ul>
+</li>
+</ul>
+<p>参考：<a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly" target="_blank" rel="noopener">JS事件循环机制（event loop）之宏任务、微任务</a>、阮一峰老师的JavaScript运行机制详解</p>
 
       </div>
       <div class="post-copyright">
