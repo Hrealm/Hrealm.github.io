@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步与异步"><span class="toc-text">同步与异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件循环"><span class="toc-text">事件循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定时器"><span class="toc-text">定时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#宏任务与微任务"><span class="toc-text">宏任务与微任务</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步与异步"><span class="toc-text">同步与异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件循环"><span class="toc-text">事件循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定时器"><span class="toc-text">定时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#宏任务与微任务"><span class="toc-text">宏任务与微任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     </div>
   </div><div class="post-content"><p><code>JavaScript</code>是一门单线程语言，在最新的<code>HTML5</code>中提出了<code>Web-Worker</code>，但<code>JavaScript</code>是单线程这一核心仍未改变。所以一切<code>JavaScript</code>版的“多线程”都是用单线程模拟出来的。</p>
 <blockquote>
@@ -171,6 +171,17 @@
 <li>执行下一个宏任务，<code>setTimeout(1)</code>回调输出 <code>setTimeout1</code></li>
 </ol>
 <p>以上仅对谷歌浏览器进行执行分析，不同浏览器可能会从性能优化方面做一些处理从而导致输出的结果会不一样，这里不做分析。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><code>JavaScript</code>是一门单线程语言</li>
+<li>事件循环是<code>js</code>实现异步的一种方法，也是<code>js</code>的执行机制</li>
+<li>宏任务按顺序执行，且浏览器在每个宏任务之间渲染页面</li>
+<li>所有微任务也按顺序执行，且在以下场景会立即执行所有微任务<ul>
+<li>每个回调之后且<code>js</code>执行栈为空</li>
+<li>每个宏任务结束后</li>
+</ul>
+</li>
+</ul>
+<p>参考：<a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly" target="_blank" rel="noopener">JS事件循环机制（event loop）之宏任务、微任务</a>、阮一峰老师的JavaScript运行机制详解</p>
 
       </div>
       <div class="post-copyright">
