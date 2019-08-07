@@ -90,24 +90,6 @@
   </entry>
   
   <entry>
-    <title>迁移 Hexo</title>
-    <link href="https://hrealm.github.io/posts/hello-world/"/>
-    <id>https://hrealm.github.io/posts/hello-world/</id>
-    <published>2019-04-17T09:15:11.625Z</published>
-    <updated>2019-05-30T08:31:44.216Z</updated>
-    
-    <content type="html"><![CDATA[<p>换一个环境写写博客感觉还是OK的，非常喜欢<a href="https://hexo.io/" target="_blank" rel="noopener">hexo</a>的简约风。之前用服务器搭建的个人博客实在臃肿，趁在服务器过期，就玩玩期待已久的<code>Hexo</code>吧。新的环境动力十足，干劲满满，不过难受的是之前的博文都被我放到了印象笔记，而它导入导出都不支持<code>Markdown</code>格式~~o(&gt;_&lt;)o ~~</p><a id="more"></a><h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>也就是说，从印象笔记中导出的博文，我还需要进行重新排版+采用<code>Markdown</code>格式重新写入<code>Hexo</code>，这个以后慢慢在补全吧！</p><blockquote><p>熟悉一下Hexo基本命令</p></blockquote><h3 id="Create-new-post"><a href="#Create-new-post" class="headerlink" title="Create new post"></a>Create new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server   --简写--&gt;   hexo s</span><br></pre></td></tr></table></figure><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate    --简写--&gt;   hexo g</span><br></pre></td></tr></table></figure><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy    --简写--&gt;   hexo d</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;换一个环境写写博客感觉还是OK的，非常喜欢&lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo&lt;/a&gt;的简约风。之前用服务器搭建的个人博客实在臃肿，趁在服务器过期，就玩玩期待已久的&lt;code&gt;Hexo&lt;/code&gt;吧。新的环境动力十足，干劲满满，不过难受的是之前的博文都被我放到了印象笔记，而它导入导出都不支持&lt;code&gt;Markdown&lt;/code&gt;格式~~o(&amp;gt;_&amp;lt;)o ~~&lt;/p&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>非跨域 Ajax</title>
     <link href="https://hrealm.github.io/posts/non-cross-domain-ajax/"/>
     <id>https://hrealm.github.io/posts/non-cross-domain-ajax/</id>
@@ -151,6 +133,28 @@
     
     
       <category term="CSS" scheme="https://hrealm.github.io/tags/CSS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>迁移 Hexo</title>
+    <link href="https://hrealm.github.io/posts/hello-world/"/>
+    <id>https://hrealm.github.io/posts/hello-world/</id>
+    <published>2017-04-17T07:38:51.000Z</published>
+    <updated>2019-08-07T14:14:57.911Z</updated>
+    
+    <content type="html"><![CDATA[<p>换一个环境写写博客感觉还是OK的，非常喜欢<a href="https://hexo.io/" target="_blank" rel="noopener">hexo</a>的简约风。之前用服务器搭建的个人博客实在臃肿，趁在服务器过期，就玩玩期待已久的<code>Hexo</code>吧。新的环境动力十足，干劲满满，不过难受的是之前的博文都被我放到了印象笔记，而它导入导出都不支持<code>Markdown</code>格式~~o(&gt;_&lt;)o ~~</p><a id="more"></a><h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>也就是说，从印象笔记中导出的博文，我还需要进行重新排版+采用<code>Markdown</code>格式重新写入<code>Hexo</code>，这个以后慢慢在补全吧！</p><blockquote><p>熟悉一下Hexo基本命令</p></blockquote><h3 id="Create-new-post"><a href="#Create-new-post" class="headerlink" title="Create new post"></a>Create new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server   --简写--&gt;   hexo s</span><br></pre></td></tr></table></figure><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate    --简写--&gt;   hexo g</span><br></pre></td></tr></table></figure><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy    --简写--&gt;   hexo d</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;换一个环境写写博客感觉还是OK的，非常喜欢&lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo&lt;/a&gt;的简约风。之前用服务器搭建的个人博客实在臃肿，趁在服务器过期，就玩玩期待已久的&lt;code&gt;Hexo&lt;/code&gt;吧。新的环境动力十足，干劲满满，不过难受的是之前的博文都被我放到了印象笔记，而它导入导出都不支持&lt;code&gt;Markdown&lt;/code&gt;格式~~o(&amp;gt;_&amp;lt;)o ~~&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="div+css" scheme="https://hrealm.github.io/categories/div-css/"/>
+    
+    
+      <category term="HEXO" scheme="https://hrealm.github.io/tags/HEXO/"/>
     
   </entry>
   
