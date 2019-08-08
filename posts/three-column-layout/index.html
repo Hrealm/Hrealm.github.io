@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="迁移 Hexo"><meta name="keywords" content="HEXO, Hrealm's Blog"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://hrealm.github.io/posts/hello-world/">
+<meta name="description" content="CSS 三栏布局"><meta name="keywords" content="CSS, Hrealm's Blog"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://hrealm.github.io/posts/three-column-layout/">
 
 <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
 </script>
 
-    <title>迁移 Hexo - Hrealm's Blog</title>
+    <title>CSS 三栏布局 - Hrealm's Blog</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -106,12 +106,12 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">迁移 Hexo
+      <h1 class="post-title">CSS 三栏布局
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2017-04-17
+          2017-08-08
         </span><span class="post-category">
             <a href="/categories/div-css/">div+css</a>
             </span>
@@ -121,18 +121,27 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方法"><span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-new-post"><span class="toc-text">Create new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#浮动布局"><span class="toc-text">浮动布局</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p>换一个环境写写博客感觉还是 OK 的，非常喜欢 <a href="https://hexo.io/" target="_blank" rel="noopener">hexo</a> 的简约风。不过难受的是之前的博文都被我放到了印象笔记，而它导入导出都不支持 <code>Markdown</code> 格式o(&gt;_&lt;)o </p>
-<a id="more"></a>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>也就是说，从印象笔记中导出的博文，我还需要进行重新排版 + 采用 <code>Markdown</code> 格式重新写入 <code>Hexo</code>，这个以后慢慢在补全吧！</p>
-<blockquote>
-<p>熟悉一下 Hexo 基本命令</p>
+  </div><div class="post-content"><blockquote>
+<p>三栏布局：指左右两栏宽度固定，中间一栏自适应的布局方法</p>
+<p>本文将总结几种常见常用的 <code>CSS</code> 三栏布局方法</p>
 </blockquote>
-<h3 id="Create-new-post"><a href="#Create-new-post" class="headerlink" title="Create new post"></a>Create new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server   --简写--&gt;   hexo s</span><br></pre></td></tr></table></figure>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate    --简写--&gt;   hexo g</span><br></pre></td></tr></table></figure>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy    --简写--&gt;   hexo d</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="浮动布局"><a href="#浮动布局" class="headerlink" title="浮动布局"></a>浮动布局</h2><p>左右模块各自向左右浮动，并设置中间模块的 <code>margin</code> 值使中间模块宽度自适应</p>
+<ul>
+<li><p>优点：布局简单，兼容性良好</p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li><p>中间一栏主要内容无法最先加载，当页面内容较多时会影响用户体验；</p>
+<pre><code>- `DOM` 结构必须是先写浮动部分，在到中间一栏；
+- 浮动布局是有局限性的，浮动元素脱离文档流，要做好清除浮动；
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class=&quot;box&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;left&quot;&gt;&lt;/div&gt;</span><br><span class="line">		&lt;div class=&quot;right&quot;&gt;&lt;/div&gt;</span><br><span class="line">		&lt;div class=&quot;center&quot;&gt;&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">    .box&#123;</span><br><span class="line">    	height: 500px;</span><br><span class="line">    &#125;</span><br><span class="line">    .left&#123;</span><br><span class="line">        float:left;</span><br><span class="line">        width: 200px;</span><br><span class="line">        height: 100%;</span><br><span class="line">        background-color: red;</span><br><span class="line">    &#125;</span><br><span class="line">    .right&#123;</span><br><span class="line">        float: right;</span><br><span class="line">        width: 300px;</span><br><span class="line">        height: 100%;</span><br><span class="line">        background-color: green;</span><br><span class="line">    &#125;</span><br><span class="line">    .center&#123;</span><br><span class="line">        height: 100%;</span><br><span class="line">        margin-left: 220px;</span><br><span class="line">        margin-right: 320px;</span><br><span class="line">        background-color: blue;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
 
       </div>
       <div class="post-copyright">
@@ -142,7 +151,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://hrealm.github.io/posts/hello-world/">https://hrealm.github.io/posts/hello-world/</a>
+      <a href="https://hrealm.github.io/posts/three-column-layout/">https://hrealm.github.io/posts/three-column-layout/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
@@ -150,13 +159,18 @@
   </div>
       <footer class="post-footer">
         <div class="post-tags">
-            <a href="/tags/HEXO/">HEXO</a>
+            <a href="/tags/CSS/">CSS</a>
             </div>
         
-        <nav class="post-nav"><a class="prev" href="/posts/horizontal-vertical-centered/">
+        <nav class="post-nav"><a class="prev" href="/posts/non-cross-domain-ajax/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">CSS 水平垂直居中</span>
+        <span class="prev-text nav-default">非跨域 Ajax</span>
         <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/horizontal-vertical-centered/">
+        <span class="next-text nav-default">CSS 水平垂直居中</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
       </a>
     </nav></footer>
     </article></div><div class="comments" id="comments"></div></div>
