@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="非跨域 Ajax"><meta name="keywords" content="AJAX, Hrealm's Blog"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<meta name="description" content="非跨域 Ajax 与 跨域 Jsonp"><meta name="keywords" content="AJAX, Hrealm's Blog"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
 <link rel="canonical" href="https://hrealm.github.io/posts/non-cross-domain-ajax/">
 
 <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
 </script>
 
-    <title>非跨域 Ajax - Hrealm's Blog</title>
+    <title>非跨域 Ajax 与 跨域 Jsonp - Hrealm's Blog</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -106,7 +106,7 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">非跨域 Ajax
+      <h1 class="post-title">非跨域 Ajax 与 跨域 Jsonp
         </h1>
 
       <div class="post-meta">
@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax-原生-js-写法"><span class="toc-text">Ajax 原生 js 写法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XMLHttpRequest-对象"><span class="toc-text">XMLHttpRequest 对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现流程"><span class="toc-text">实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readyState-请求状态码"><span class="toc-text">.readyState 请求状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#onreadystatechange-事件"><span class="toc-text">.onreadystatechange 事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-状态码"><span class="toc-text">HTTP 状态码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JQuery-中的-Ajax"><span class="toc-text">JQuery 中的 Ajax</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax-原生-js-写法"><span class="toc-text">Ajax 原生 js 写法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XMLHttpRequest-对象"><span class="toc-text">XMLHttpRequest 对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现流程"><span class="toc-text">实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readyState-请求状态码"><span class="toc-text">.readyState 请求状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#onreadystatechange-事件"><span class="toc-text">.onreadystatechange 事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-状态码"><span class="toc-text">HTTP 状态码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JQuery-中的-Ajax"><span class="toc-text">JQuery 中的 Ajax</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Jsonp-的工作原理"><span class="toc-text">Jsonp 的工作原理</span></a></li></ol></li></ol>
     </div>
   </div><div class="post-content"><p>Ajax 即“Asynchronous Javascript And XML”（异步 JavaScript 和 XML），是指一种创建交互式网页应用的网页开发技术。意思就是用JavaScript执行<strong>异步网络请求</strong>。</p>
 <blockquote>
@@ -177,6 +177,9 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">      type:    <span class="comment">//数据的提交方式：get和post</span></span><br><span class="line">      url:     <span class="comment">//请求地址</span></span><br><span class="line">      <span class="keyword">async</span>:   <span class="comment">//是否支持异步刷新，默认是true</span></span><br><span class="line">      data:    <span class="comment">//需要提交的数据</span></span><br><span class="line">      dataType:   <span class="comment">//服务器返回数据的类型，例xml,String,Json,jsonp等</span></span><br><span class="line">      success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">	  <span class="comment">//请求成功后的回调函数,参数data就是服务器返回的数据</span></span><br><span class="line">      &#125;   </span><br><span class="line">      error:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">	  <span class="comment">//请求失败后的回调函数，根据需要可以不写，一般只写上面的success回调函数</span></span><br><span class="line">      &#125;   </span><br><span class="line">   &#125;)</span><br></pre></td></tr></table></figure>
 <p>这里提一下<code>dataType</code>如果为<code>jsonp</code>&ensp;Ajax支持跨域调用</p>
 <p><code>jsonp</code>只支持<code>get</code>请求方式</p>
+<h2 id="Jsonp-的工作原理"><a href="#Jsonp-的工作原理" class="headerlink" title="Jsonp 的工作原理"></a>Jsonp 的工作原理</h2><p>因为浏览器的同源策略，所以有些时候不得不需要跨域访问，这时就可以利用 <code>&lt;script&gt;</code> 标签没有跨域限制来达到与第三方通讯。</p>
+<p><code>Jsonp</code> 的工作原理：首先是利用 <code>&lt;script&gt;</code> 标签的 <code>src</code> 属性来实现跨域，通过将前端的一个 <code>callback</code> 函数作为参数传递到服务器端，然后服务器端将这个参数作为函数名来包裹数据再返回。</p>
+<p>由于使用 <code>script</code> 标签的 <code>src</code> 属性，因此只支持 <code>GET</code> 请求</p>
 
       </div>
       <div class="post-copyright">
