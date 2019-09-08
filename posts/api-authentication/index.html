@@ -115,7 +115,16 @@
         </span></div>
     </header>
 
-    <div class="post-content">
+    <div class="post-content"><p>在 <a href="https://github.com/Hrealm/freemusic" target="_blank" rel="noopener">FreeMusic</a> 成功跨域访问酷狗 <code>API</code> 后，成功获取到了酷狗的很多数据，包括歌手的信息，歌曲列表等等，但今天在获取歌曲的播放链接的时候，请求失败返回：<code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code></p>
+<a id="more"></a>
+<p>排查问题后发现，若在浏览器上输入酷狗歌曲详情 <code>API</code> ：<code>http://www.kugou.com/yy/index.php?r=play/getdata&amp;hash=1035269c05791f1665e36dffe478326c</code> ；显示请求失败， <code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code> ；然后我在浏览器上访问酷狗官网，<a href="https://www.kugou.com/，然后随便播放一首歌,，首次会出现一个滑动验证，才可以播放；我再次尝试刚刚那个" target="_blank" rel="noopener">https://www.kugou.com/，然后随便播放一首歌,，首次会出现一个滑动验证，才可以播放；我再次尝试刚刚那个</a> <code>API</code> 请求，结果请求成功了，成功得到数据 <code>{“status”:1,&quot;err_code&quot;:0,&quot;data&quot;:{20}}</code> </p>
+<p>显然，问题就在刚刚的滑动验证，这其实就是一个设备的身份认证，所以直接排查新增的 <code>cookie</code> 。在测试后发现，在原有的基础上需要携带 <code>cookie</code> 里面的 <code>kg_mid</code> 参数才能正常获取，而且是在认证后生成的，所以 <code>kg_mid</code> 参数是浏览器生成的而不是服务器返回的。</p>
+<p>既然请求需要带上 <code>cookie</code> 身份认证参数才能成功获取，尝试在项目初始化时默认添加 <code>kg_mid</code> 参数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"kg_mid=1923c6069c305133056773d8fce002ce;expires = Session"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>kg_mid</code> 参数是直接在酷狗认证的浏览器上拿下来测试。再次请求</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> url = <span class="string">'/playApi/yy/index.php?r=play/getdata&amp;hash='</span>+ hash;</span><br><span class="line"><span class="keyword">this</span>.axios.get(url).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(res.data)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>成功得到数据 <code>{“status”:1,&quot;err_code&quot;:0,&quot;data&quot;:{20}}</code> </p>
+
       </div>
       <div class="post-copyright">
     <p class="copyright-item">
