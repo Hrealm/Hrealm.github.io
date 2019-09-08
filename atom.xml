@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-09-08T16:10:26.216Z</updated>
+  <updated>2019-09-08T16:14:27.925Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>请求酷狗 API 身份认证</title>
-    <link href="https://hrealm.github.io/posts/20190903"/>
-    <id>https://hrealm.github.io/posts/20190903</id>
+    <link href="https://hrealm.github.io/posts/29037"/>
+    <id>https://hrealm.github.io/posts/29037</id>
     <published>2019-09-03T15:26:36.000Z</published>
-    <updated>2019-09-08T16:10:26.216Z</updated>
+    <updated>2019-09-08T16:14:27.925Z</updated>
     
     <content type="html"><![CDATA[<p>在 <a href="https://github.com/Hrealm/freemusic" target="_blank" rel="noopener">FreeMusic</a> 项目中成功跨域访问酷狗 <code>API</code> 后，成功获取到了酷狗的很多数据，包括歌手的信息，歌曲列表等等，但今天在获取歌曲的播放链接的时候，请求失败返回：<code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code></p><a id="more"></a><p>排查问题后发现，若在浏览器上输入酷狗歌曲详情 <code>API</code> ：<code>http://www.kugou.com/yy/index.php?r=play/getdata&amp;hash=1035269c05791f1665e36dffe478326c</code> ；显示请求失败， <code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code> ；然后我在浏览器上访问酷狗官网，<a href="https://www.kugou.com" target="_blank" rel="noopener">https://www.kugou.com</a> 然后随便播放一首歌,，首次会出现一个滑动验证，才可以播放；我再次尝试刚刚那个 <code>API</code> 请求，结果请求成功了，成功得到数据 <code>{“status”:1,&quot;err_code&quot;:0,&quot;data&quot;:{20}}</code> </p><p>显然，问题就在刚刚的滑动验证，这其实就是一个设备的身份认证，所以直接排查新增的 <code>cookie</code> 。在测试后发现，在原有的基础上需要携带 <code>cookie</code> 里面的 <code>kg_mid</code> 参数才能正常获取，而且是在认证后生成的，所以 <code>kg_mid</code> 参数是浏览器生成的而不是服务器返回的。</p><p>既然请求需要带上 <code>cookie</code> 身份认证参数才能成功获取，尝试在项目初始化时默认添加 <code>kg_mid</code> 参数</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">"kg_mid=1923c6069c305133056773d8fce002ce;expires = Session"</span>;</span><br></pre></td></tr></table></figure><p>这里的 <code>kg_mid</code> 参数是直接在酷狗认证的浏览器上拿下来测试。再次请求</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> url = <span class="string">'/playApi/yy/index.php?r=play/getdata&amp;hash='</span>+ hash;</span><br><span class="line"><span class="keyword">this</span>.axios.get(url).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line"><span class="built_in">console</span>.log(res.data)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>成功得到数据 <code>{“status”:1,&quot;err_code&quot;:0,&quot;data&quot;:{20}}</code> </p>]]></content>
     
@@ -42,8 +42,8 @@
   
   <entry>
     <title>vue 使用 axios 跨域处理</title>
-    <link href="https://hrealm.github.io/posts/20190820"/>
-    <id>https://hrealm.github.io/posts/20190820</id>
+    <link href="https://hrealm.github.io/posts/30727"/>
+    <id>https://hrealm.github.io/posts/30727</id>
     <published>2019-08-20T13:56:31.000Z</published>
     <updated>2019-08-29T16:40:10.026Z</updated>
     
@@ -66,8 +66,8 @@
   
   <entry>
     <title>JavaScript 执行机制</title>
-    <link href="https://hrealm.github.io/posts/20190702"/>
-    <id>https://hrealm.github.io/posts/20190702</id>
+    <link href="https://hrealm.github.io/posts/2616"/>
+    <id>https://hrealm.github.io/posts/2616</id>
     <published>2019-07-02T15:00:44.000Z</published>
     <updated>2019-07-04T12:14:41.518Z</updated>
     
@@ -93,8 +93,8 @@
   
   <entry>
     <title>XSS 跨域攻击机制及防御技术</title>
-    <link href="https://hrealm.github.io/posts/20190602"/>
-    <id>https://hrealm.github.io/posts/20190602</id>
+    <link href="https://hrealm.github.io/posts/57250"/>
+    <id>https://hrealm.github.io/posts/57250</id>
     <published>2019-06-02T03:43:29.000Z</published>
     <updated>2019-08-29T14:05:02.140Z</updated>
     
@@ -115,8 +115,8 @@
   
   <entry>
     <title>从 URL 到浏览器渲染完成</title>
-    <link href="https://hrealm.github.io/posts/20190512"/>
-    <id>https://hrealm.github.io/posts/20190512</id>
+    <link href="https://hrealm.github.io/posts/41560"/>
+    <id>https://hrealm.github.io/posts/41560</id>
     <published>2019-05-12T15:38:51.000Z</published>
     <updated>2019-06-19T09:06:13.591Z</updated>
     
@@ -139,8 +139,8 @@
   
   <entry>
     <title>非跨域 Ajax 与 跨域 Jsonp</title>
-    <link href="https://hrealm.github.io/posts/20181129"/>
-    <id>https://hrealm.github.io/posts/20181129</id>
+    <link href="https://hrealm.github.io/posts/20068"/>
+    <id>https://hrealm.github.io/posts/20068</id>
     <published>2018-11-29T13:38:05.000Z</published>
     <updated>2019-09-08T16:06:46.825Z</updated>
     
@@ -166,8 +166,8 @@
   
   <entry>
     <title>CSS 三栏布局</title>
-    <link href="https://hrealm.github.io/posts/20170808"/>
-    <id>https://hrealm.github.io/posts/20170808</id>
+    <link href="https://hrealm.github.io/posts/8955"/>
+    <id>https://hrealm.github.io/posts/8955</id>
     <published>2017-08-08T06:43:56.000Z</published>
     <updated>2019-09-08T16:06:12.988Z</updated>
     
@@ -191,8 +191,8 @@
   
   <entry>
     <title>CSS 水平垂直居中</title>
-    <link href="https://hrealm.github.io/posts/20170721"/>
-    <id>https://hrealm.github.io/posts/20170721</id>
+    <link href="https://hrealm.github.io/posts/29610"/>
+    <id>https://hrealm.github.io/posts/29610</id>
     <published>2017-07-21T05:01:58.000Z</published>
     <updated>2019-09-08T16:06:21.737Z</updated>
     
@@ -215,8 +215,8 @@
   
   <entry>
     <title>迁移 Hexo</title>
-    <link href="https://hrealm.github.io/posts/20170417"/>
-    <id>https://hrealm.github.io/posts/20170417</id>
+    <link href="https://hrealm.github.io/posts/16107"/>
+    <id>https://hrealm.github.io/posts/16107</id>
     <published>2017-04-17T07:38:51.000Z</published>
     <updated>2019-09-08T16:05:47.966Z</updated>
     
