@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="请求酷狗 API 身份认证"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<meta name="description" content="请求酷狗 API 身份认证"><meta name="keywords" content="cookie, API, Hrealm's Blog"><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
 <link rel="canonical" href="https://hrealm.github.io/posts/api-authentication/">
 
 <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
@@ -112,7 +112,10 @@
       <div class="post-meta">
         <span class="post-time">
           2019-09-03
-        </span></div>
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
     </header>
 
     <div class="post-content"><p>在 <a href="https://github.com/Hrealm/freemusic" target="_blank" rel="noopener">FreeMusic</a> 项目中成功跨域访问酷狗 <code>API</code> 后，成功获取到了酷狗的很多数据，包括歌手的信息，歌曲列表等等，但今天在获取歌曲的播放链接的时候，请求失败返回：<code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code></p>
@@ -140,6 +143,10 @@
     </p>
   </div>
       <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cookie/">cookie</a>
+            <a href="/tags/API/">API</a>
+            </div>
         
         <nav class="post-nav"><a class="next" href="/posts/vue-axios/">
         <span class="next-text nav-default">vue 使用 axios 跨域处理</span>
