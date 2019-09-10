@@ -121,7 +121,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#添加-cookie"><span class="toc-text">添加 cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析-kg-mid"><span class="toc-text">分析 kg_mid</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#添加-cookie"><span class="toc-text">添加 cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析-kg-mid"><span class="toc-text">分析 kg_mid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成-kg-mid"><span class="toc-text">生成 kg_mid</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>在 <a href="https://github.com/Hrealm/freemusic" target="_blank" rel="noopener">FreeMusic</a> 项目中成功跨域访问酷狗 <code>API</code> 后，成功获取到了酷狗的很多数据，包括歌手的信息，歌曲列表等等，但今天在获取歌曲的播放链接的时候，请求失败返回：<code>{“status”:0,&quot;err_code&quot;:20010,&quot;data&quot;:[]}</code></p>
 <a id="more"></a>
@@ -137,11 +137,18 @@
 <h2 id="分析-kg-mid"><a href="#分析-kg-mid" class="headerlink" title="分析 kg_mid"></a>分析 kg_mid</h2><p>首先我查看了所有的请求，然后筛选后只保留了获取 <code>JS</code> 文件的请求，确定具体是哪个文件最死板的方法是一个个打开然后去查有没有 <code>kg_mid</code> 这个参数的相关生成方法，但是这里我们根据 <code>JS</code> 文件的名字推测出应该是这个 <code>kguser_min.js</code> 文件，因为 <code>Cookie</code> 就是相当于用户的身份，所以根据 <code>user</code> 能推测出应该是这个文件</p>
 <div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/api-authentication/1.jpg" width="80%" height="80%"></div><br>然后将这个 <code>JS</code> 文件下载并格式化，因为是压缩后的文件，接下来就是查找 <code>kg_mid</code> ，猜测没有错误<br><br><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/api-authentication/2.jpg" width="80%" height="80%"></div><br>根据源码，<code>kg_mid</code> 是 <code>KgMid</code> 对象的一个属性值，根据 <code>KgMid</code> 对象继续查找，因为上下文出现 <code>KgMid</code> 对象比较多，所以在边找时候要联系上下文看一下，直到找到这个<br><br><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/api-authentication/3.jpg" width="80%" height="80%"></div>
 
-<p>这段代码里面，需要注意两个方法：<code>KgUser.Guid()</code> 和 <code>KgUser.Cookie.write()</code> ， <code>Guid()</code>方法很明显是按照一定规则返回一个生成的参数，并传给下面的<code>Md5()</code>方法；</p>
+<p>这段代码里面，需要注意两个方法：<code>KgUser.Guid()</code> 和 <code>KgUser.Cookie.write()</code> ， <code>Guid()</code>方法很明显是按照一定规则返回一个生成的参数，这里 <code>S4()</code> 返回的是一个长度为4的随机字符串，每个字符都属于 <strong>a-z / 0-9</strong> 的范围，最后 <code>Guid()</code> 返回的是8个 <code>S4()</code> 拼接的字符串，再经过Md5加密</p>
 <div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/api-authentication/6.jpg" width="80%" height="80%"></div>
 
 <p>再来看看 <code>Cookie.write()</code> ，其中第一和第二个参数是最主要的，对应 <code>KgUser.KgMid.name</code> 和 <code>KgUser.Md5(n)</code> </p>
 <div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/api-authentication/5.jpg" width="80%" height="80%"></div>
+
+<p>到这里大概知道 <code>kg_mid</code> 是如何生成的了，既然知道是如何生成，不妨在项目初始化的时候仿造同样的方式来生成 <code>kg_mid</code> 。</p>
+<h2 id="生成-kg-mid"><a href="#生成-kg-mid" class="headerlink" title="生成 kg_mid"></a>生成 kg_mid</h2><p>其实 <code>Cookie.write()</code> 主要的参数就是前两个 <strong>name，value</strong>  ，这里 name 取默认即可，然后根据生成 value 所需的方法添加到项目 <code>methods</code> 中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 函数具体内容直接复制源码部分即可 */</span></span><br><span class="line">methods: &#123;</span><br><span class="line">    Guid: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</span><br><span class="line">    Md5: <span class="function"><span class="keyword">function</span>(<span class="params">str</span>) </span>&#123;&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是在项目初始化的时候生成 <code>kg_mid</code> 并添加到 <code>cookie</code> 中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">created()&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="keyword">this</span>.Guid();</span><br><span class="line">    <span class="built_in">document</span>.cookie = <span class="string">`kg_mid=<span class="subst">$&#123;<span class="keyword">this</span>.Md5(n)&#125;</span>;expires = Session`</span>;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
       </div>
       <div class="post-copyright">
     <p class="copyright-item">
