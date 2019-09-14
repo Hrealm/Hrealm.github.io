@@ -129,20 +129,15 @@
 <h2 id="防盗链机制"><a href="#防盗链机制" class="headerlink" title="防盗链机制"></a>防盗链机制</h2><p>当你的项目和需要访问的地址不在同一个域内，这时浏览器的防盗链机制就发挥作用了。其中防盗链是利用 <code>HTTP header</code> 中的 <code>referer</code> 来实现的。当浏览器向服务器发送请求时会带上 <code>referer</code> ，来告诉服务器从哪个页面链接过来的。</p>
 <p>服务器通过识别 <code>referer</code> 来判断请求是否是自己的域名，如果不是自己的域名就会拦截，不会将请求发送出去，如果是自己域名就可以继续访问。</p>
 <p>请求发送成功的请求头：</p>
-<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/1.jpg" width="90%" height="90%"></div>
-
-<p>请求未发送成功的请求头：（会有Referer字段）</p>
-<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/2.jpg" width="90%" height="90%"></div>
-
+<p><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/1.jpg" width="90%" height="90%"></div><br>请求未发送成功的请求头：（会有Referer字段）</p>
+<p><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/2.jpg" width="90%" height="90%"></div></p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>这里我采用的是比较暴力的方法，直接在标签里加 <code>meta</code> </p>
 <p><code>&lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;</code></p>
 <p>在某些情况网站想要控制页面发送给服务器的 <code>referer</code> 信息时，可以使用 <code>referer metadata</code> 参数。</p>
 <p><code>referer</code> 的 <code>metadata</code> 属性可以设置 <code>content</code> 属性值为以下：</p>
 <ul>
-<li><p>default</p>
-</li>
-<li><p>never</p>
-</li>
+<li>default</li>
+<li>never</li>
 <li>always</li>
 <li>origin</li>
 </ul>
