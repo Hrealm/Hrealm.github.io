@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-09-14T09:28:47.098Z</updated>
+  <updated>2019-09-14T09:45:04.075Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>403 访问被禁止</title>
+    <title>403 访问被拒绝</title>
     <link href="https://hrealm.github.io/posts/a2ab.html"/>
     <id>https://hrealm.github.io/posts/a2ab.html</id>
     <published>2019-09-14T07:57:40.000Z</published>
-    <updated>2019-09-14T09:28:47.098Z</updated>
+    <updated>2019-09-14T09:45:04.075Z</updated>
     
     <content type="html"><![CDATA[<p>在 <a href="https://github.com/Hrealm/freemusic" target="_blank" rel="noopener">FreeMusic</a> 项目中调用酷狗 MP4 资源的时候，无法播放，报403错误。然而直接在浏览器地址栏回车则可以正常播放。</p><p>报403错误则是访问被拒绝，既然我做了跨域处理还被拒绝这里就要提及浏览器的防盗链机制。</p><a id="more"></a><h2 id="防盗链机制"><a href="#防盗链机制" class="headerlink" title="防盗链机制"></a>防盗链机制</h2><p>当你的项目和需要访问的地址不在同一个域内，这时浏览器的防盗链机制就发挥作用了。其中防盗链是利用 <code>HTTP header</code> 中的 <code>referer</code> 来实现的。当浏览器向服务器发送请求时会带上 <code>referer</code> ，来告诉服务器从哪个页面链接过来的。</p><p>服务器通过识别 <code>referer</code> 来判断请求是否是自己的域名，如果不是自己的域名就会拦截，不会将请求发送出去，如果是自己域名就可以继续访问。</p><p>请求发送成功的请求头：</p><p><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/1.jpg" width="90%" height="90%"></div><br>请求未发送成功的请求头：（会有Referer字段）</p><p><div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="/posts/a2ab/2.jpg" width="90%" height="90%"></div></p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>这里我采用的是比较暴力的方法，直接在标签里加 <code>meta</code> </p><p><code>&lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;</code></p><p>在某些情况网站想要控制页面发送给服务器的 <code>referer</code> 信息时，可以使用 <code>referer metadata</code> 参数。</p><p><code>referer</code> 的 <code>metadata</code> 属性可以设置 <code>content</code> 属性值为以下：</p><ul><li>default</li><li>never</li><li>always</li><li>origin</li></ul><p><code>default</code> ：若当前页面使用的是 https 协议，而正要加载资源使用的是普通的 http 协议，则将 http header 中的 referer 置空；</p><p><code>never</code> ：删除 http header 中的 referer，所有从当前页面发起的请求将不会携带 referer；</p><p><code>always</code> ：不改变 http header 中的 referer 的值；</p><p><code>origin</code> ：只发送 origin 部分；</p>]]></content>
     
