@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-10-06T15:49:18.122Z</updated>
+  <updated>2019-09-14T09:45:04.075Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -15,22 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>apply、call、bind的区别和应用</title>
-    <link href="https://hrealm.github.io/posts/e171.html"/>
-    <id>https://hrealm.github.io/posts/e171.html</id>
-    <published>2019-10-06T15:43:10.000Z</published>
-    <updated>2019-10-06T15:49:18.122Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-      <category term="JavaScript" scheme="https://hrealm.github.io/categories/JavaScript/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>403 访问被拒绝</title>
@@ -200,6 +184,22 @@
       <category term="ajax" scheme="https://hrealm.github.io/tags/ajax/"/>
     
       <category term="jsonp" scheme="https://hrealm.github.io/tags/jsonp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>apply、call、bind的区别和应用</title>
+    <link href="https://hrealm.github.io/posts/e171.html"/>
+    <id>https://hrealm.github.io/posts/e171.html</id>
+    <published>2018-10-06T15:43:10.000Z</published>
+    <updated>2019-10-06T15:51:39.305Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="https://hrealm.github.io/categories/JavaScript/"/>
+    
     
   </entry>
   
