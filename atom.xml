@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-10-06T15:43:10.781Z</updated>
+  <updated>2019-10-06T15:49:18.122Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -17,15 +17,17 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>javascript-apply-call-and-bind</title>
+    <title>apply、call、bind的区别和应用</title>
     <link href="https://hrealm.github.io/posts/e171.html"/>
     <id>https://hrealm.github.io/posts/e171.html</id>
     <published>2019-10-06T15:43:10.000Z</published>
-    <updated>2019-10-06T15:43:10.781Z</updated>
+    <updated>2019-10-06T15:49:18.122Z</updated>
     
     <summary type="html">
     
     </summary>
+    
+      <category term="JavaScript" scheme="https://hrealm.github.io/categories/JavaScript/"/>
     
     
   </entry>
