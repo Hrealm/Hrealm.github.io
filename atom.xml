@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hrealm.github.io/"/>
-  <updated>2019-09-14T09:45:04.075Z</updated>
+  <updated>2019-10-06T15:43:10.781Z</updated>
   <id>https://hrealm.github.io/</id>
   
   <author>
@@ -15,6 +15,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>javascript-apply-call-and-bind</title>
+    <link href="https://hrealm.github.io/posts/e171.html"/>
+    <id>https://hrealm.github.io/posts/e171.html</id>
+    <published>2019-10-06T15:43:10.000Z</published>
+    <updated>2019-10-06T15:43:10.781Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>403 访问被拒绝</title>
