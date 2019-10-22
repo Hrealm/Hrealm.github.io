@@ -117,10 +117,9 @@
       目前共计 13 个标签
     </div>
     <div class="tag-cloud-tags">
-      <a href="/tags/vue/" style="font-size: 16px;">vue</a> <a href="/tags/api/" style="font-size: 16px;">api</a> <a href="/tags/cookie/" style="font-size: 16px;">cookie</a> <a href="/tags/css/" style="font-size: 16px;">css</a> <a href="/tags/ajax/" style="font-size: 16px;">ajax</a> <a href="/tags/jsonp/" style="font-size: 16px;">jsonp</a> <a href="/tags/hexo/" style="font-size: 16px;">hexo</a> <a href="/tags/axios/" style="font-size: 16px;">axios</a> <a href="/tags/同步与异步/" style="font-size: 16px;">同步与异步</a> <a href="/tags/宏任务与微任务/" style="font-size: 16px;">宏任务与微任务</a> <a href="/tags/DOM渲染/" style="font-size: 16px;">DOM渲染</a> <a href="/tags/TCP连接/" style="font-size: 16px;">TCP连接</a> <a href="/tags/XSS漏洞/" style="font-size: 16px;">XSS漏洞</a>
+      <a href="/tags/ajax/" style="font-size: 16px;">ajax</a> <a href="/tags/api/" style="font-size: 16px;">api</a> <a href="/tags/hexo/" style="font-size: 16px;">hexo</a> <a href="/tags/css/" style="font-size: 16px;">css</a> <a href="/tags/同步与异步/" style="font-size: 16px;">同步与异步</a> <a href="/tags/宏任务与微任务/" style="font-size: 16px;">宏任务与微任务</a> <a href="/tags/cookie/" style="font-size: 16px;">cookie</a> <a href="/tags/jsonp/" style="font-size: 16px;">jsonp</a> <a href="/tags/DOM渲染/" style="font-size: 16px;">DOM渲染</a> <a href="/tags/TCP连接/" style="font-size: 16px;">TCP连接</a> <a href="/tags/vue/" style="font-size: 16px;">vue</a> <a href="/tags/axios/" style="font-size: 16px;">axios</a> <a href="/tags/XSS漏洞/" style="font-size: 16px;">XSS漏洞</a>
     </div>
-  </div></div>
-        </div>
+  </div></div></div>
       </main>
 
       <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
@@ -147,7 +146,19 @@
       <div class="back-to-top" id="back-to-top">
         <i class="iconfont icon-up"></i>
       </div>
-    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+    </div><script type="text/javascript">
+	(function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+  </script><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
   <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
   <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
