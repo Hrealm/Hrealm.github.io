@@ -155,7 +155,9 @@
 <h2 id="XSS-攻击实现"><a href="#XSS-攻击实现" class="headerlink" title="XSS 攻击实现"></a>XSS 攻击实现</h2><p><code>XSS</code>攻击是需要满足<code>XSS</code>攻击的条件。<code>XSS</code>漏洞的利用过程较为直接。反射型&#x2F;<code>DOM</code>型跨站攻击均可以理解为：服务器接收到数据，并原样返回给用户，整个过程中<code>Web</code>应用并没有存入数据库，这也导致了攻击无法持久化，仅针对当次请求有效，也就无法直接攻击其他用户。一般这两类攻击也可利用钓鱼、垃圾邮件等手段产生攻击其他用户效果。</p>
 <p>反射型与存储型<code>XSS</code>攻击的实现原理和主要流程非常相似，但由于存储型<code>XSS</code>攻击的持久性及危害更加强大，所以本次<code>XSS</code>攻击实现，将采用存储型跨站攻击方式进行实践分析。</p>
 <p>首先，要成功实施跨站脚本攻击，我们需要了解一下存储型跨站的主要业务流程</p>
-<p><img src="/57250%5Cbusiness-process.png" alt="business-process"></p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="57250\business-process.png"/></div>
+<!-- ![business-process](./xss-attack-and-defense/business-process.png) -->
+
 <p>根据上图业务流程，存储型<code>XSS</code>攻击有两个重点的步骤：信息入库处理、出库处理，结合<code>XSS</code>攻击的特性可知，<code>XSS</code>攻击成功必须要满足以下四个条件：</p>
 <ol>
 <li>目标网页有攻击者可控的输入点</li>
@@ -175,7 +177,9 @@
 <p>通过<code>img</code>的<code>src</code>属性自带跨域机制，以及指定的<code>url</code>传参的形式将窃取到敏感信息发送至攻击者准备的收集信息站点。攻击的类型为存储型跨站攻击，也就是说，攻击者植入的这些恶意代码将通过存储型跨站的业务流程，存入数据库，并能返回给用户，同时浏览器将输出解析为脚本，并执行该脚本。而且该脚本长期有效，并且一直存在该网站上。</p>
 <p>到此，攻击者已经完成了攻击，接下来就是等待用户点击此链接，从而窃取用户的<code>cookie</code>值。</p>
 <h3 id="窃取用户敏感信息"><a href="#窃取用户敏感信息" class="headerlink" title="窃取用户敏感信息"></a>窃取用户敏感信息</h3><p>攻击者发布存在恶意代码的链接将一直存在该网站，而普通用户并不知道该链接存在恶意代码，所以当普通用户点击该链接后，攻击者将窃取敏感信息。</p>
-<p><img src="/57250%5Ccookie.jpg" alt="cookie"></p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="57250\cookie.jpg"/></div>
+<!-- ![cookie](./xss-attack-and-defense/cookie.jpg) -->
+
 <p>上图所示均为攻击者收集敏感信息站点所收集到的用户<code>cookie</code>信息，攻击者可采用此敏感信息进行伪登录，从而获取更多用户信息。</p>
 <h2 id="XSS-攻击的防御"><a href="#XSS-攻击的防御" class="headerlink" title="XSS 攻击的防御"></a>XSS 攻击的防御</h2><p>上面提到了<code>XSS</code>攻击的必要条件，那么只要破坏<code>XSS</code>攻击的必要条件将可防止<code>XSS</code>安全漏洞。目前对<code>XSS</code>漏洞的防御一般有两种方式。</p>
 <h3 id="代码层防御"><a href="#代码层防御" class="headerlink" title="代码层防御"></a>代码层防御</h3><p><code>XSS</code>攻击防范主要是由程序漏洞造成的，治标还要治本，从代码层面上采用预防漏洞的高级编程技术，可以帮助大大减少<code>XSS</code>安全漏洞。</p>
