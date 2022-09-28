@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="vue 使用 axios 跨域处理"/><meta name="keywords" content="vue, axios, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/30727.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>vue 使用 axios 跨域处理 - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">vue 使用 axios 跨域处理
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-08-20
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>小学期在做一个音乐网 <a target="_blank" rel="noopener" href="https://github.com/Hrealm/freemusic">FreeMusic</a> 需要很多跨域访问的 <code>API</code> ，所以随之而来就是如何解决跨域问题同时还支持本地 <code>API</code> ，网上方法很多不过大部分会遭受 <a target="_blank" rel="noopener" href="https://juejin.im/post/5cc2e3ecf265da03904c1e06">CORB</a> ，或者需要在服务器端设置跨域。</p>
+<span id="more"></span>
+
+<p>因为这个项目采用的是 <code>vue</code> 框架 + <code>axios</code> 进行 <code>http</code> 请求，所以结合 <code>vue</code> +  <code>axios</code> 进行跨域处理，先说说在服务器端设置跨域处理：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">header(“Access-Control-Allow-Origin<span class="punctuation">:</span>*”); </span><br><span class="line">header(“Access-Control-Allow-Headers<span class="punctuation">:</span>content-type”); </span><br><span class="line">header(“Access-Control-Request-Method<span class="punctuation">:</span>GET<span class="punctuation">,</span>POST”); </span><br></pre></td></tr></table></figure>
+
+<p>服务器端设置跨域主要在于对请求头进行访问控制即可，很显然对于我本次访问的 <code>API</code> 是酷狗音乐的，我们无法操作服务器端。</p>
+<p>结合 <code>vue</code> 里面的配置文件可以自己设置一个代理服务器，使用 <code>proxyTable</code> 进行配置，同时还可以配置本地 <code>API</code> ，在 <code>config/index.js</code> 里面找到 <code>proxyTable: &#123;&#125;</code> , 然后在里面进行如下配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">proxyTable<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;/kugouApi&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        target<span class="punctuation">:</span>&#x27;http<span class="punctuation">:</span><span class="comment">//m.kugou.com/&#x27;,</span></span><br><span class="line">        changeOrigin<span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        pathRewrite<span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;^/kugouApi&#x27;<span class="punctuation">:</span>&#x27;/&#x27;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span>，</span><br><span class="line">    <span class="attr">&quot;/api&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">        target<span class="punctuation">:</span> &#x27;http<span class="punctuation">:</span><span class="comment">//localhost:8008/&#x27;,</span></span><br><span class="line">        changeOrigin<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        pathRewrite<span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">            &#x27;^/api&#x27;<span class="punctuation">:</span> &#x27;/&#x27;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>/kugouApi</code> 可自定义命名，<code>target</code> 设置你将要调用的接口域名和端口号，<code>changeOrigin</code> 将主机头的原点更改为目标URL，所以要设为 <code>true</code>，<code>pathRewrite</code> 路径重写，即可直接使用 <code>/kugouApi</code> 代替 <code>target</code> 里面的接口。如果要设置多个代理，同理直接在后面继续添加，注意这里设置了多个代理，<code>Axios.defaults.baseURL</code> 就不能在设置了。</p>
+<p>使用：<code>http://m.kugou.com/?json=true</code>   &#x3D;&gt;  <code>/kugouApi/?json=true</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">axios</span>.<span class="title function_">get</span>(<span class="string">&#x27;/kugouApi/?json=true&#x27;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span>=&gt;</span>&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>还可以在 <code>main.js</code> 中将代理挂载到 <code>vue</code> 的原型上</p>
+<p><code>Vue.prototype.host = &#39;/api&#39; </code>  请求的时候只需要使用 <code>this.host</code> + “路由参数地址” 即可</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/30727.html">https://hrealm.github.io/posts/30727.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/vue/">vue</a>
+            <a href="/tags/axios/">axios</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/posts/716d.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">请求酷狗 API 身份认证</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/2616.html">
+        <span class="next-text nav-default">JavaScript 执行机制</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

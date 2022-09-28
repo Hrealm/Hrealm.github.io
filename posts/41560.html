@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="从 URL 到浏览器渲染完成"/><meta name="keywords" content="DOM渲染, TCP连接, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/41560.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>从 URL 到浏览器渲染完成 - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">从 URL 到浏览器渲染完成
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-05-12
+        </span><span class="post-category">
+            <a href="/categories/How-browsers-work/">How-browsers-work</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%A6%82%E5%BF%B5"><span class="toc-text">模糊概念</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E9%80%9A%E4%BF%A1"><span class="toc-text">网络连接通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5-URL"><span class="toc-text">输入 URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="toc-text">DNS 域名解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B-TCP-%E8%BF%9E%E6%8E%A5"><span class="toc-text">建立 TCP 连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E9%80%81-HTTP-%E8%AF%B7%E6%B1%82"><span class="toc-text">发送 HTTP 请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82"><span class="toc-text">服务器处理请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-TCP-%E8%BF%9E%E6%8E%A5"><span class="toc-text">关闭 TCP 连接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93"><span class="toc-text">页面渲染</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90-HTML"><span class="toc-text">浏览器解析 HTML</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E9%A1%B5%E9%9D%A2"><span class="toc-text">浏览器渲染页面</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a>
+    </div>
+  </div><div class="post-content"><p>学完计算机网络到现在（感觉已经全部还给老师了），对于输入<code>URL</code>到浏览器渲染完成显示页面这个过程一直都只是一个比较模糊的概念，今天有空总结一下。</p>
+<span id="more"></span>
+
+<h2 id="模糊概念"><a href="#模糊概念" class="headerlink" title="模糊概念"></a>模糊概念</h2><p>当你输入指定的<code>URL</code>（Uniform Resource Locator统一资源定位符）并按下回车，浏览器就开始干活了</p>
+<ol>
+<li><code>DNS</code>域名解析</li>
+<li>建立<code>TCP</code>连接</li>
+<li>发送<code>HTTP</code>请求</li>
+<li>服务器处理请求</li>
+<li>返回响应结果</li>
+<li>关闭<code>TCP</code>连接</li>
+<li>浏览器解析<code>HTML</code></li>
+<li>浏览器渲染页面</li>
+</ol>
+<p>以上8个过程，我大致分为两个部分：网络连接通信和页面渲染，进行详细了解</p>
+<h1 id="网络连接通信"><a href="#网络连接通信" class="headerlink" title="网络连接通信"></a>网络连接通信</h1><p>每个网络设备间的通信都遵循<code>TCP/IP</code>协议，利用<code>TCP/IP</code>协议族进行网络通信时，会通过分层顺序与对方进行通信。<code>TCP/IP</code>模型分层自上而下分别为：应用层、传输层、网络层、数据链路层、物理层。发送端从应用层往下走，接收端从底层往上走。</p>
+<h2 id="输入-URL"><a href="#输入-URL" class="headerlink" title="输入 URL"></a>输入 URL</h2><p>用户输入的<code>URL</code>可以为域名或<code>IP</code>地址，使用域名是为了方便记忆，但是为了让计算机理解这个地址还需要把它解析为<code>IP</code>地址。上面我说到，当用户输入<code>URL</code>并按下回车，浏览器才开始工作其实是不正确的，现在主流浏览器引入了<code>DNS</code>预取技术。 浏览器为了加快域名<code>DNS</code>解析速度，会对网页的所有链接先做域名解析。所以，当用户在输入指定<code>URL</code>的时候，浏览器其实已经在本地缓存模糊搜索<code>URL</code>了，然后智能提示并助于用户补全<code>URL</code>，并且在用户还没有按下回车键的时候，浏览器就已经开始使用<code>DNS</code>预取技术解析该域名了。</p>
+<h2 id="DNS-域名解析"><a href="#DNS-域名解析" class="headerlink" title="DNS 域名解析"></a>DNS 域名解析</h2><ul>
+<li>浏览器客户端收到你输入的域名地址后，首先浏览器搜索自己的<code>DNS</code>缓存，其次是系统缓存，接着到本地的<code>hosts</code>文件查找有没有对应的域名映射，如果有，则向其<code>IP</code>地址发送请求</li>
+<li>以上都没有找到对应的域名映射，再去找<code>DNS</code>服务器</li>
+<li>浏览器客户端向本地<code>DNS</code>服务器发送一个含有域名<code>www.baidu.com</code>的<code>DNS</code>查询报文</li>
+<li>本地<code>DNS</code>服务器把查询报文转发到根<code>DNS</code>服务器，根<code>DNS</code>服务器分析其后缀，然后向本地<code>DNS</code>服务器返回其后缀的服务器的<code>IP</code>地址，这里返回<code>comDNS</code>服务器的<code>IP</code>地址</li>
+<li>本地<code>DNS</code>服务器再次向<code>comDNS</code>服务器发送查询请求，<code>comDNS</code>服务器注意到其<code>www.baidu.com</code>后缀并用负责该域名的权威<code>DNS</code>服务器的<code>IP</code>地址作为回应</li>
+<li>负责该域名的权威<code>DNS</code>服务器解析该域名映射的<code>IP</code>地址并返回本地<code>DNS</code>服务器</li>
+<li>最后，本地<code>DNS</code>服务器将含有<code>www.baidu.com</code>的<code>IP</code>地址的响应报文发送给客户端</li>
+</ul>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\dns-server-queries.png" width="80%" height="80%"/></div>
+> 从客户端到本地服务器属于**递归查询**，而`DNS`服务器之间的交互属于**迭代查询**
+>
+> 正常情况下，本地`DNS`服务器的缓存中已有`comDNS`服务器的地址，因此请求根域名服务器这一步不是必需的。
+
+<h2 id="建立-TCP-连接"><a href="#建立-TCP-连接" class="headerlink" title="建立 TCP 连接"></a>建立 TCP 连接</h2><p><code>TCP</code> 是一种面向有连接的传输层协议。它可以保证两端（发送端和接收端）通信主机之间的通信可达。它还能够处理在传输过程中丢包、传输顺序乱掉等异常情况，以及有效利用宽带，缓解网络拥堵。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\tcp.png" width="63%" height="63%"/></div>
+客户端发送一个带有`SYN`标志的数据包给服务端，服务端收到后，回传一个带有`SYN/ACK`标志的数据包以示传达确认信息，最后客户端再回传一个带`ACK`标志的数据包，代表握手结束，连接成功。
+
+<blockquote>
+<p><strong>SYN</strong> ：在连接建立时用来同步序号。当<code>SYN=1</code>而<code>ACK=0</code>时，表明这是一个连接请求报文。对方若同意建立连接，则应在响应报文中使<code>SYN=1</code>和<code>ACK=1</code>。 因此，<code> SYN</code>置1就表示这是一个连接请求或连接接受报文。 </p>
+<p><strong>ACK</strong>： 即是确认字符，在数据通信中，服务器发给客户端的一种传输类控制字符。表示发来的数据已确认接收无误。<code>TCP</code>协议规定，只有<code>ACK=1</code>时有效，也规定连接建立后所有发送的报文的<code>ACK</code>必须为1。</p>
+<p><strong>FIN （finis）</strong>：完，终结的意思， 用来释放一个连接。当<code>FIN = 1 </code>时，表明此报文段的发送方的数据已经发送完毕，并要求释放连接。</p>
+</blockquote>
+<h2 id="发送-HTTP-请求"><a href="#发送-HTTP-请求" class="headerlink" title="发送 HTTP 请求"></a>发送 HTTP 请求</h2><p>与服务器建立连接后，客户端就向服务器发起请求，产生<code>HTTP</code>请求报文。</p>
+<p>一个<code>HTTP</code>请求报文由请求行<code>request line</code>、请求头部<code>header</code>、空行和请求数据4个部分组成。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\request-message.png" width="55%" height="55%"/></div>
+在浏览器（Google）中查看报文首部：
+
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\Message.jpg" width="80%" height="80%"/></div>
+请求行，用来说明请求类型，要访问的资源以及所使用的HTTP版本；
+
+<p>请求头部，紧接着请求行之后的部分，用来说明服务器要使用的附加信息；</p>
+<p>空行，请求头部后面的空行是必须的；</p>
+<p>请求体，可以添加任意的其他数据；</p>
+<p>通过报文还可以看到更多具体信息，这里就不进一步分析报文了。</p>
+<h2 id="服务器处理请求"><a href="#服务器处理请求" class="headerlink" title="服务器处理请求"></a>服务器处理请求</h2><p>服务器接受到客户端发送的HTTP请求后，查找客户端请求的资源，并返回响应报文。</p>
+<p>访问资源可以是访问静态资源，这个就直接根据<code>URL</code>地址去服务器里找即可；如果访问动态资源的话要经过一个叫 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/CGI/607810">CGI</a> 的东西，再用服务端脚本处理，再返回给客户端。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\processing-requests.png"/></div>
+## &ensp; 返回响应结果
+
+<p>服务器在处理完请求后，返回一个<code>HTTP</code>响应报文。</p>
+<p><code>HTTP</code>响应报文和请求报文的结构差不多，也是由四个部分组成：状态行、消息报头、空行、响应体。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\response-message.png" width="40%" height="40%"/></div>
+响应报文中包括一个重要的信息一一状态码。状态码由三位数字组成，第一个数字定义了响应的类别，且有五种可能取值：
+
+<ul>
+<li>1xx：指示信息 – 表示请求已接收，继续处理</li>
+<li>2xx：成功 – 表示请求已被成功接收、理解、接受</li>
+<li>3xx：重定向 – 要完成请求必须进行更进一步的操作</li>
+<li>4xx：客户端错误 – 请求有语法错误或请求无法实现</li>
+<li>5xx：服务器端错误 – 服务器未能实现合法的请求</li>
+</ul>
+<p><a href="https://hrealm.github.io/posts/20068.html#HTTP-%E7%8A%B6%E6%80%81%E7%A0%81"><strong>常见HTTP状态码</strong></a></p>
+<h2 id="关闭-TCP-连接"><a href="#关闭-TCP-连接" class="headerlink" title="关闭 TCP 连接"></a>关闭 TCP 连接</h2><p>为了避免服务器与客户端双方的资源占用和损耗，当双方没有请求或响应传递时，任意一方都可以发起关闭请求。与创建<code>TCP</code>连接的3次握手类似，不过关闭<code>TCP</code>连接，需要4次握手。</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\closeTCP.png" width="63%" height="63%"/></div>
+> **FIN**： 完，终结的意思， 用来释放一个连接。表明此报文段的发送方的数据已经发送完毕，并要求释放连接。
+>
+> **ACK**：即是确认字符，在数据通信中，服务器发给客户端的一种传输类控制字符。表示发来的数据已确认接收无误。
+
+<h1 id="页面渲染"><a href="#页面渲染" class="headerlink" title="页面渲染"></a>页面渲染</h1><p>在服务器返回的响应报文中，响应体主要由<code>HTML</code>、<code>CSS</code>、<code>JS</code>，以及图片、视频等各种媒体资源。如果说响应的内容是<code>HTML</code>文档的话，就需要浏览器进行解析和渲染最后再呈现给用户。整个过程需涉及两个方面：解析和渲染。</p>
+<h2 id="浏览器解析-HTML"><a href="#浏览器解析-HTML" class="headerlink" title="浏览器解析 HTML"></a>浏览器解析 HTML</h2><p>当浏览器获得一个<code>HTML</code>文件时，浏览器会将<code>HTML</code>解析成一个<code>DOM</code>树，<code>DOM</code>树的构建过程是一个深度遍历过程，当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点。解析<code>CSS</code>成<code>CSS</code>规则数，<code>CSS</code>选择符是从右到左进行匹配的。然后通过<code>DOM</code>树和<code>CSS</code>规则树<code>Rule Tree</code>来构造渲染树<code>Rendering Tree</code>。</p>
+<p><code>Rendering Tree</code>渲染树与<code>DOM</code>树不同，渲染树中并没有<code>head</code>、<code>display:none</code>等不必显示的节点。</p>
+<blockquote>
+<p>注意 <code>visibility: hidden</code> 与 <code>display: none</code> 是不一样的。前者隐藏元素，但元素仍占据着布局空间（即将其渲染成一个空框），而后者 (<code>display: none</code>) 将元素从渲染树中完全移除，元素既不可见，也不是布局的组成部分。</p>
+</blockquote>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="41560\render-tree-construction.png"/></div>
+- 渲染树只包含渲染网页所需的节点
+- 布局计算每个对象的精确位置和大小
+- 最后一步是绘制，使用最终渲染树将像素渲染到屏幕上
+
+<h2 id="浏览器渲染页面"><a href="#浏览器渲染页面" class="headerlink" title="浏览器渲染页面"></a>浏览器渲染页面</h2><p>有了<code>Render Tree</code>，浏览器已经能知道网页中哪些节点应该是可见的以及它们的计算样式，但尚未计算它们在设备视口内的确切位置和大小—这就是“布局”阶段，也称为“自动重排”。</p>
+<p>为弄清每个对象在网页上的确切大小和位置，浏览器从渲染树的根节点开始进行遍历。</p>
+<p><strong>需要注意的是</strong>：上述过程是逐步完成的，为了更好的用户体验，渲染引擎会尽可能早的将内容呈现到屏幕上，并不会等到所有的<code>html</code>都解析完成之后再去构建和布局<code>render</code>树。这个过程是循序渐进的，浏览器解析完一部分内容就显示一部分内容，同时还可能通过网络下载其他资源内容。</p>
+<p>根据渲染树布局，计算<code>CSS</code>样式，即每个节点在页面中的大小和位置等几何信息。<code>HTML</code>默认是流式布局的，<code>CSS</code>和<code>JS</code>会打破这种布局，改变<code>DOM</code>的外观样式以及大小和位置。这就触发浏览器进行<code>Repaint</code>重绘、<code>Reflow</code>回流。</p>
+<blockquote>
+<p>Repaint（重绘）：只改变某个元素的背景颜色、文字样式，不影响整体布局，浏览器将Repaint，重画屏幕某一部分</p>
+<p>Reflow（回流）：当某个元素发生了变化影响了整体布局，浏览器将需要倒回去重新渲染</p>
+</blockquote>
+<p><code>Reflow</code>比<code>Repaint</code>更花费时间，也就是更影响性能。所以在写代码的时候尽量避免过多的<code>Reflow</code>。</p>
+<p><strong>减少 Reflow &#x2F; Repaint</strong></p>
+<ul>
+<li>采用<code>ClassName</code>修改<code>DOM</code>，减少重绘</li>
+<li>对于动画的<code>HTML</code>，可使其脱离文档流，修改<code>CSS</code>不会导致回流</li>
+<li>避免使用<code>table</code>布局，避免修改布局导致回流</li>
+</ul>
+<p>最后浏览器绘制各个节点，将页面渲染到屏幕上。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>边写边思考，不断在补充。我发现这个话题可以延伸的太多太多了，无论是广度还是深度都还可以继续扩展，总结完全篇感觉还差很多，我仅限站在自己理解的角度上去堆积式的总结，以后待更新。</p>
+<p>参考：<a target="_blank" rel="noopener" href="http://taligarsiel.com/Projects/howbrowserswork1.htm">How browsers work</a>、<a target="_blank" rel="noopener" href="https://developers.google.cn/web/fundamentals/performance/critical-rendering-path/render-tree-construction">渲染树构建、布局及绘制</a></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/41560.html">https://hrealm.github.io/posts/41560.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/DOM%E6%B8%B2%E6%9F%93/">DOM渲染</a>
+            <a href="/tags/TCP%E8%BF%9E%E6%8E%A5/">TCP连接</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/posts/57250.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">XSS 跨域攻击机制及防御技术</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/20068.html">
+        <span class="next-text nav-default">非跨域 Ajax 与 跨域 Jsonp</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

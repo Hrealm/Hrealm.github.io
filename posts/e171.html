@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="一文了解 apply、call、bind"/><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/e171.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>一文了解 apply、call、bind - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">一文了解 apply、call、bind
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-10-06
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#apply-%E4%B8%8E-call"><span class="toc-text">apply() 与 call()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bind"><span class="toc-text">bind()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%8F%98%E9%87%8F%E4%BF%9D%E5%AD%98-this"><span class="toc-text">关于变量保存 this</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#apply-%E4%B8%8E-call-%E7%9A%84%E6%80%A7%E8%83%BD"><span class="toc-text">apply 与 call 的性能</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>改变函数执行时的上下文，具体一点就是改变函数运行时的 <code>this</code> 指向，这就是 <code>apply()</code>、<code>call()</code>、<code>bind()</code> 存在的意义。具体什么时候使用哪一个函数来改变 <code>this</code> 指向，就需要了解它们之间的区别和应用。</p>
+<span id="more"></span>
+
+<h2 id="apply-与-call"><a href="#apply-与-call" class="headerlink" title="apply() 与 call()"></a>apply() 与 call()</h2><p><code>apply()</code> 和 <code>call()</code> 两者改变 <code>this</code> 指向的方式类似，在改变函数的 <code>this</code> 上下文后便执行该函数，区别在于两者接收的参数的方式不一致。</p>
+<p><code>apply()</code> 方法接收两个参数，第一个是指定函数运行的上下文 <code>this</code>，第二个参数是一个数组，数组第一个值对应原函数的第一个参数，数组第二个值以此类推。</p>
+<p><code>call()</code> 方法的第一个参数跟 <code>apply()</code> 相同，从第二个参数开始分别对应原函数的形参。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sum = &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&#x27;sum&#x27;</span>,</span><br><span class="line">    <span class="attr">computed</span>: <span class="keyword">function</span>(<span class="params">num1,num2</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span>:<span class="subst">$&#123;num1+num2&#125;</span>`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> obj =&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;obj&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//不改变函数上下文</span></span><br><span class="line">sum.<span class="title function_">computed</span>(<span class="number">1</span>,<span class="number">2</span>);  <span class="comment">//sum:3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用 apply()</span></span><br><span class="line">sum.<span class="property">computed</span>.<span class="title function_">apply</span>(obj,[<span class="number">1</span>,<span class="number">2</span>]);  <span class="comment">//obj:3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用 call()</span></span><br><span class="line">sum.<span class="property">computed</span>.<span class="title function_">call</span>(obj,<span class="number">1</span>,<span class="number">2</span>);  <span class="comment">//obj:3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>apply()</code> 和 <code>call()</code> 两者都改变了函数运行的上下文，如果调用的函数不用传参，<code>apply()</code> 和 <code>call()</code> 的效果都是一样的。当调用函数不知道需要传递参数个数时，则可以使用 <code>apply()</code> 。</p>
+<h2 id="bind"><a href="#bind" class="headerlink" title="bind()"></a>bind()</h2><p><code>bind()</code> 同样是可以改变函数内 <code>this</code> 指向，但与 <code>apply()</code>、<code>call()</code> 不同的是，<code>bind()</code> 方法不会立即调用，而是创建返回一个新函数，称为绑定函数，其内的 <code>this</code> 指向为创建它时传入 <code>bind()</code> 的第一个参数，而传入的第二个及以后的参数作为原函数的参数来调用原函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用 bind()</span></span><br><span class="line"><span class="keyword">let</span> _bind = sum.<span class="property">computed</span>.<span class="title function_">bind</span>(obj,<span class="number">1</span>,<span class="number">2</span>);</span><br><span class="line"><span class="title function_">_bind</span>();  <span class="comment">//obj:3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//简写</span></span><br><span class="line">sum.<span class="property">computed</span>.<span class="title function_">bind</span>(obj,<span class="number">1</span>,<span class="number">2</span>)();  <span class="comment">//obj:3</span></span><br></pre></td></tr></table></figure>
+
+<p>当使用 <code>bind()</code> 改变函数的 <code>this</code> 上下文后，则返回改变了上下文后的新函数。也就是说，在我们需要使用一个新上下文的旧函数时候，可以使用 <code>bind()</code> 绑定一个新的上下文到函数中，从而产生新的绑定函数，然后再运行这个有指定 <code>this</code> 对象的函数。</p>
+<h2 id="关于变量保存-this"><a href="#关于变量保存-this" class="headerlink" title="关于变量保存 this"></a>关于变量保存 this</h2><p>函数在被调用时都会自动取得两个特殊变量：<code>this</code> 和 <code>arguments</code> 。内部函数在搜索这两个变量时，只会搜索到其活动对象为止，因此永远不可能直接访问外部函数中的这两个变量。不过，把外部作用域中的 <code>this</code> 对象保存在一个闭包能够访问到的变量里，就可以让闭包访问该对象了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;hrealm&#x27;</span>,</span><br><span class="line">    <span class="attr">getName</span>: <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="comment">//使用变量保存this</span></span><br><span class="line">        <span class="keyword">let</span> _this = <span class="variable language_">this</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> _this.<span class="property">name</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="title function_">getName</span>()());  <span class="comment">//&#x27;hrealm&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里可以直接使用 <code>bind()</code> 来完成，并把外部函数 <code>this</code> 指向绑定到内部函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">    name: &#x27;hrealm&#x27;,</span><br><span class="line">    getName: function()&#123;</span><br><span class="line">        return function()&#123;</span><br><span class="line">            return this.name;</span><br><span class="line">        &#125;.bind(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="apply-与-call-的性能"><a href="#apply-与-call-的性能" class="headerlink" title="apply 与 call 的性能"></a>apply 与 call 的性能</h2><p>在知道调用函数的参数个数时，使用 <code>call()</code> 的性能会优于 <code>apply()</code> ,编译的的效率更高。因为在 <code>apply()</code> 实现过程中，需要对第二个参数进行类数组的长度判断等额外的操作。</p>
+<p>所以在当有 <code>this</code> 指向或者执行参数时， <code>call()</code> 的性能要优于 <code>apply()</code>。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhengyinhui100/article/details/7837127">call和apply性能对比</a></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/e171.html">https://hrealm.github.io/posts/e171.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/posts/20068.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">非跨域 Ajax 与 跨域 Jsonp</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/8955.html">
+        <span class="next-text nav-default">CSS 三栏布局</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

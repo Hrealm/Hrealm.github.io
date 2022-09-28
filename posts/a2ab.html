@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="403 访问被拒绝"/><meta name="keywords" content="api, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/a2ab.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>403 访问被拒绝 - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">403 访问被拒绝
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-14
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E7%9B%97%E9%93%BE%E6%9C%BA%E5%88%B6"><span class="toc-text">防盗链机制</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>在 <a target="_blank" rel="noopener" href="https://github.com/Hrealm/freemusic">FreeMusic</a> 项目中调用酷狗 MP4 资源的时候，无法播放，报403错误。然而直接在浏览器地址栏回车则可以正常播放。</p>
+<p>报403错误则是访问被拒绝，既然我做了跨域处理还被拒绝这里就要提及浏览器的防盗链机制。</p>
+<span id="more"></span>
+
+<h2 id="防盗链机制"><a href="#防盗链机制" class="headerlink" title="防盗链机制"></a>防盗链机制</h2><p>当你的项目和需要访问的地址不在同一个域内，这时浏览器的防盗链机制就发挥作用了。其中防盗链是利用 <code>HTTP header</code> 中的 <code>referer</code> 来实现的。当浏览器向服务器发送请求时会带上 <code>referer</code> ，来告诉服务器从哪个页面链接过来的。</p>
+<p>服务器通过识别 <code>referer</code> 来判断请求是否是自己的域名，如果不是自己的域名就会拦截，不会将请求发送出去，如果是自己域名就可以继续访问。</p>
+<p>请求发送成功的请求头：</p>
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="a2ab\1.jpg" width="90%" height="90%"/></div>
+请求未发送成功的请求头：（会有Referer字段）
+
+<div style="width:100%;height:100%;text-align:center;font-size: 0;"><img src="a2ab\2.jpg" width="90%" height="90%"/></div>
+## 解决方法
+
+<p>这里我采用的是比较暴力的方法，直接在标签里加 <code>meta</code> </p>
+<p><code>&lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;</code></p>
+<p>在某些情况网站想要控制页面发送给服务器的 <code>referer</code> 信息时，可以使用 <code>referer metadata</code> 参数。</p>
+<p><code>referer</code> 的 <code>metadata</code> 属性可以设置 <code>content</code> 属性值为以下：</p>
+<ul>
+<li>default</li>
+<li>never</li>
+<li>always</li>
+<li>origin</li>
+</ul>
+<p><code>default</code> ：若当前页面使用的是 https 协议，而正要加载资源使用的是普通的 http 协议，则将 http header 中的 referer 置空；</p>
+<p><code>never</code> ：删除 http header 中的 referer，所有从当前页面发起的请求将不会携带 referer；</p>
+<p><code>always</code> ：不改变 http header 中的 referer 的值；</p>
+<p><code>origin</code> ：只发送 origin 部分；</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/a2ab.html">https://hrealm.github.io/posts/a2ab.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/api/">api</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/posts/5fee.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">区分 node / es6 不同的导入导出方式</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/716d.html">
+        <span class="next-text nav-default">请求酷狗 API 身份认证</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

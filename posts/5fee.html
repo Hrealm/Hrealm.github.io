@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="区分 node / es6 不同的导入导出方式"/><meta name="keywords" content="node, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/5fee.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>区分 node / es6 不同的导入导出方式 - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">区分 node / es6 不同的导入导出方式
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-04-19
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-js-%E4%B8%AD%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA%EF%BC%9A-module-exports-x2F-exports"><span class="toc-text">Node.js 中导入导出： module.exports &#x2F; exports</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES6-%E4%B8%AD%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA%EF%BC%9Aexport-x2F-export-default-x2F-import"><span class="toc-text">ES6 中导入导出：export &#x2F; export default &#x2F; import</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>在前端开发中，书写 <code>js</code> 现在很倡导以模块导入导出的方式来定义不同功能的代码块，可能在很多代码中，会看到类似 <code>exports</code>, <code>module.exports</code>, <code>export</code>, <code>import</code>, <code>require()</code> 这些导入导出的方式，不知你是否能清楚的区分他们？下面逐一描述一下，这些方式应用的方法和环境。</p>
+<p>各自的使用环境</p>
+<span id="more"></span>
+
+<blockquote>
+<p>require : node &#x2F; es6<br>import&#x2F;export : es6<br>module.exports&#x2F;exports : node</p>
+</blockquote>
+<h2 id="Node-js-中导入导出：-module-exports-x2F-exports"><a href="#Node-js-中导入导出：-module-exports-x2F-exports" class="headerlink" title="Node.js 中导入导出： module.exports &#x2F; exports"></a>Node.js 中导入导出： module.exports &#x2F; exports</h2><p><code>module.exports / exports</code> 属于 <code>Node.js</code> 的写法, <code>module.exports / exports = &#123;&#125;</code> 初始化时都是一个空对象，他们不同之处在于，<code>module.exports</code> 导出的内容会被 <code>require</code> 识别，但 <code>exports</code> 导出的内容不会被 <code>require</code> 识别，是因为 <code>exports</code> 其实是 <code>module.exports</code> 的一个引用。</p>
+<p><code>module.exports / exports</code> 导出的内容属于 <code>Object</code> 引用类型，传讲一个引用类型时，实际是定义了一个对象，并声明该对象指向该对象内存地址的一个引用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">name</span> = <span class="string">&#x27;我是 module.exports&#x27;</span></span><br><span class="line"><span class="built_in">exports</span> = <span class="variable language_">module</span>.<span class="property">exports</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">module</span>.<span class="property">exports</span>) <span class="comment">// &#123;name: &#x27;我是 module.exports&#x27;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">exports</span>)       <span class="comment">//  &#123;name: &#x27;我是 module.exports&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.<span class="property">name</span> = <span class="string">&#x27;我改名了&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">module</span>.<span class="property">exports</span>) <span class="comment">// &#123;name: &#x27;我改名了&#x27;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">exports</span>)       <span class="comment">//  &#123;name: &#x27;我改名了&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;我是一个对象&#x27;</span>,</span><br><span class="line">  <span class="attr">func</span>: <span class="keyword">function</span>(<span class="params">x</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span> = obj</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">module</span>.<span class="property">exports</span>) <span class="comment">// &#123;name: &#x27;我改名了&#x27;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">exports</span>)       <span class="comment">// &#123;name: &#x27;我是一个对象&#x27;, func: [Function]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出，初始化时，<code>exports = &#123;&#125;</code> 指向了 <code>module.exports = &#123;&#125;</code> ，他们的 <code>name</code> 属性指向同一个内存地址，所以在修改 <code>exports.name</code> 的时候，<code>exports.name</code> 和 <code>module.exports.name</code> 都被改变了；当 <code>exports = obj</code> 时，<code>obj</code> 在内存中指向了一个新的地址，<code>exports</code> 作为 <code>obj </code>的引用，也指向了这个新地址，所以 <code>exports.name </code>和 <code>module.exports.name</code> 值不相等了。</p>
+<h2 id="ES6-中导入导出：export-x2F-export-default-x2F-import"><a href="#ES6-中导入导出：export-x2F-export-default-x2F-import" class="headerlink" title="ES6 中导入导出：export &#x2F; export default &#x2F; import"></a>ES6 中导入导出：export &#x2F; export default &#x2F; import</h2><p><code>ES6</code> 语法导入导出还是十分灵活的，我们项目里也使用 <code>ES6</code> 写法，可以记住以下几点帮助你理解：</p>
+<ol>
+<li><p><code>export / export default</code> 可以导出常量，对象，模块，函数等；</p>
+</li>
+<li><p><code>export</code> 可以导出多个变量，<code>export default</code> 只能导出一个变量；</p>
+</li>
+<li><p><code>export</code> 导出的内容，需要 <code>import &#123;&#125;</code> 导入；<code>export default</code> 导出的内容，直接 <code>import</code> xxx 即可；</p>
+</li>
+<li><p><code>export</code> 能导出变量表达式，<code>export default </code>不可以；</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// demo 1</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> num = <span class="number">100</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">&#x27;muzidx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; num, name &#125; <span class="keyword">from</span> <span class="string">&#x27;demo1&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// demo 2</span></span><br><span class="line"><span class="keyword">const</span> num = <span class="number">100</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> num</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> num <span class="keyword">from</span> <span class="string">&#x27;demo2&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// demo 3</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">hello</span>(<span class="params">x</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; hello &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; hello &#125; <span class="keyword">from</span> <span class="string">&#x27;demo3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// demo 4</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> a = <span class="number">100</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> b = <span class="number">200</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> num <span class="keyword">from</span> <span class="string">&#x27;demo4&#x27;</span></span><br><span class="line">num.<span class="property">a</span></span><br><span class="line">num.<span class="property">b</span></span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/5fee.html">https://hrealm.github.io/posts/5fee.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/node/">node</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/posts/a2ab.html">
+        <span class="next-text nav-default">403 访问被拒绝</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

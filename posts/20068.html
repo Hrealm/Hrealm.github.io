@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="非跨域 Ajax 与 跨域 Jsonp"/><meta name="keywords" content="ajax, jsonp, Hrealm's Blog" /><link rel="alternate" href="http://hrealm.github.io/atom.xml" title="Hrealm's Blog" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://hrealm.github.io/posts/20068.html"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4bb0eaf166ad26e1851f29a756fea519";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":false,"pjax":true,"latex":false};
+</script>
+
+    <title>非跨域 Ajax 与 跨域 Jsonp - Hrealm's Blog</title>
+  <meta name="generator" content="Hexo 6.2.0"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hrealm's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hrealm's Blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">非跨域 Ajax 与 跨域 Jsonp
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-11-29
+        </span><span class="post-category">
+            <a href="/categories/JavaScript/">JavaScript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ajax-%E5%8E%9F%E7%94%9F-js-%E5%86%99%E6%B3%95"><span class="toc-text">Ajax 原生 js 写法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XMLHttpRequest-%E5%AF%B9%E8%B1%A1"><span class="toc-text">XMLHttpRequest 对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="toc-text">实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readyState-%E8%AF%B7%E6%B1%82%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-text">.readyState 请求状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#onreadystatechange-%E4%BA%8B%E4%BB%B6"><span class="toc-text">.onreadystatechange 事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-text">HTTP 状态码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JQuery-%E4%B8%AD%E7%9A%84-Ajax"><span class="toc-text">JQuery 中的 Ajax</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jsonp-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">Jsonp 的工作原理</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>Ajax 即“Asynchronous Javascript And XML”（异步 JavaScript 和 XML），是指一种创建交互式网页应用的网页开发技术。意思就是用JavaScript执行<strong>异步网络请求</strong>。</p>
+<blockquote>
+<p>特点：在不刷新页面的前提下去传输数据</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="Ajax-原生-js-写法"><a href="#Ajax-原生-js-写法" class="headerlink" title="Ajax 原生 js 写法"></a>Ajax 原生 js 写法</h1><p>Ajax实现异步网络请求主要依靠<code>XMLHttpRequest</code>对象</p>
+<h2 id="XMLHttpRequest-对象"><a href="#XMLHttpRequest-对象" class="headerlink" title="XMLHttpRequest 对象"></a>XMLHttpRequest 对象</h2><p>XMLHttpRequest 对象用于在后台与服务器交换数据，能够在不重新加载页面的情况下更新网页，在页面已加载后从服务器请求数据，接收数据，在后台向服务器发送数据。所以<strong>XMLHttpRequest对象是Ajax技术的核心所在。</strong></p>
+<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><ol>
+<li>创建ajax对象</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建请求</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;get&quot;</span> , <span class="string">&quot;/tongyuan/lujing&quot;</span> , <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>open()</code>三个参数：方式，路径，是否异步</p>
+<p><code>true</code>表示脚本会在<code>send()</code>方法之后继续执行，而不等待来自服务器的响应。</p>
+<ol start="3">
+<li>发送请求</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="title function_">send</span>();</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>监听回调函数状态</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="comment">// 状态发生变化时，函数被回调</span></span><br><span class="line">   <span class="keyword">if</span> (xhr.<span class="property">readyState</span> === <span class="number">4</span>) &#123;</span><br><span class="line">       <span class="comment">// 判断响应结果:</span></span><br><span class="line">       <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">           <span class="comment">// 成功，通过responseText拿到响应的文本:</span></span><br><span class="line">           <span class="keyword">return</span> <span class="title function_">success</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">// 失败，根据响应码判断失败原因:</span></span><br><span class="line">           <span class="keyword">return</span> <span class="title function_">fail</span>(xhr.<span class="property">status</span>);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="comment">// HTTP请求还在继续...</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="readyState-请求状态码"><a href="#readyState-请求状态码" class="headerlink" title=".readyState 请求状态码"></a>.readyState 请求状态码</h2><ul>
+<li>0 未初始化 - 请求还没建立</li>
+<li>1 启动 - 请求建立了，调用<code>open()</code>但未调用<code>send()</code></li>
+<li>2 发送 - 请求发送了，调用<code>send()</code>但未处理返回数据</li>
+<li>3 接收 - 请求有部分返回数据可用了</li>
+<li>4 完成 - 请求完成，所有数据可用</li>
+</ul>
+<h2 id="onreadystatechange-事件"><a href="#onreadystatechange-事件" class="headerlink" title=".onreadystatechange 事件"></a>.onreadystatechange 事件</h2><p>当请求码<code>readyState</code>发生改变的时候触发</p>
+<p><code>status</code>响应的HTTP状态码</p>
+<p><code>.responseText</code>后台返回的文本内容</p>
+<h2 id="HTTP-状态码"><a href="#HTTP-状态码" class="headerlink" title="HTTP 状态码"></a>HTTP 状态码</h2><p>上面提到了<code>status</code>响应的HTTP状态码，那什么是HTTP状态码？当浏览者访问一个网页时，浏览者的浏览器会向网页所在服务器发出请求。当浏览器接收并显示网页前，此网页所在的服务器会返回一个包含HTTP状态码的信息头（server header）用以响应浏览器的请求。</p>
+<p>常见的HTTP状态码大致有以下这些:</p>
+<ul>
+<li>101：切换协议，服务器根据客户端的请求切换协议</li>
+<li><strong>200：请求成功。一般用于<code>GET</code>与<code>POST</code>请求</strong></li>
+<li><strong>301：永久重定向</strong></li>
+<li><strong>302：临时重定向</strong></li>
+<li>303：与301类似。使用<code>GET</code>和<code>POST</code>请求查看</li>
+<li><strong>304：请求资源未修改，使用缓存</strong></li>
+<li>307：与302类似。使用GET请求重定向</li>
+<li><strong>404：客户端请求失败</strong></li>
+<li>408：请求超时</li>
+<li><strong>500：内部服务器错误，无法完成请求</strong></li>
+<li>505：服务器不支持请求的HTTP协议的版本，无法完成处理</li>
+</ul>
+<h1 id="JQuery-中的-Ajax"><a href="#JQuery-中的-Ajax" class="headerlink" title="JQuery 中的 Ajax"></a>JQuery 中的 Ajax</h1><p>jQuery对原生Ajax进行了封装，使用方便快捷，写法也非常简洁。按照以下模式写好各个参数，就可以实现请求了。需要注意的是每个<code>API</code>所需的数据是不一样的，根据需要的数据进行填写参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>:    <span class="comment">//数据的提交方式：get和post</span></span><br><span class="line">      <span class="attr">url</span>:     <span class="comment">//请求地址</span></span><br><span class="line">      <span class="attr">async</span>:   <span class="comment">//是否支持异步刷新，默认是true</span></span><br><span class="line">      <span class="attr">data</span>:    <span class="comment">//需要提交的数据</span></span><br><span class="line">      <span class="attr">dataType</span>:   <span class="comment">//服务器返回数据的类型，例xml,String,Json,jsonp等</span></span><br><span class="line">      <span class="attr">success</span>:<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">	  <span class="comment">//请求成功后的回调函数,参数data就是服务器返回的数据</span></span><br><span class="line">      &#125;   </span><br><span class="line">      <span class="attr">error</span>:<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">	  <span class="comment">//请求失败后的回调函数，根据需要可以不写，一般只写上面的success回调函数</span></span><br><span class="line">      &#125;   </span><br><span class="line">   &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里提一下<code>dataType</code>如果为<code>jsonp</code>&amp;ensp;Ajax支持跨域调用</p>
+<p><code>jsonp</code>只支持<code>get</code>请求方式</p>
+<h1 id="Jsonp-的工作原理"><a href="#Jsonp-的工作原理" class="headerlink" title="Jsonp 的工作原理"></a>Jsonp 的工作原理</h1><p>因为浏览器的同源策略，所以有些时候不得不需要跨域访问，这时就可以利用 <code>&lt;script&gt;</code> 标签没有跨域限制来达到与第三方通讯。</p>
+<p><code>Jsonp</code> 的工作原理：首先是利用 <code>&lt;script&gt;</code> 标签的 <code>src</code> 属性来实现跨域，通过将前端的一个 <code>callback</code> 函数作为参数传递到服务器端，然后服务器端将这个参数作为函数名来包裹数据再返回。</p>
+<p>由于使用 <code>script</code> 标签的 <code>src</code> 属性，因此只支持 <code>GET</code> 请求</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://hrealm.github.io">Hrealm</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://hrealm.github.io/posts/20068.html">https://hrealm.github.io/posts/20068.html</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/ajax/">ajax</a>
+            <a href="/tags/jsonp/">jsonp</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/posts/41560.html">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">从 URL 到浏览器渲染完成</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/posts/e171.html">
+        <span class="next-text nav-default">一文了解 apply、call、bind</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:hrealm@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a target="_blank" rel="noopener" href="https://github.com/Hrealm" class="iconfont icon-github" title="github"></a>
+        <a href="http://hrealm.github.io/atom.xml" class="iconfont icon-rss" title="rss" ></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2022<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Hrealm</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
